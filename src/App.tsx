@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+
+import Webcam from 'react-webcam';
+import { Hands } from '@mediapipe/hands';
+
+import HandsContainer from './components/Hand';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
@@ -38,7 +43,6 @@ const App = () => {
     <div className='App' onContextMenu={handleContextMenu}>
       <Header />
       <body>
-        <MouseControl />
         <div
           id='context-menu'
           style={{
@@ -51,6 +55,7 @@ const App = () => {
           Hello World!!!
         </div>
         <div style={{ height: '1000px' }}></div>
+        <HandsContainer />
       </body>
     </div>
   );
@@ -66,35 +71,35 @@ const Header = () => {
   );
 };
 
-const MouseControl = () => {
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+// const MouseControl = () => {
+//   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
-  const updateCursorPosition = (e: MouseEvent) => {
-    setCursorPosition({
-      x: e.clientX + window.scrollX,
-      y: e.clientY + window.scrollY,
-    });
-  };
+//   const updateCursorPosition = (e: MouseEvent) => {
+//     setCursorPosition({
+//       x: e.clientX + window.scrollX,
+//       y: e.clientY + window.scrollY,
+//     });
+//   };
 
-  useEffect(() => {
-    window.addEventListener('mousemove', updateCursorPosition);
-    return () => window.removeEventListener('mousemove', updateCursorPosition);
-  }, []);
+//   useEffect(() => {
+//     window.addEventListener('mousemove', updateCursorPosition);
+//     return () => window.removeEventListener('mousemove', updateCursorPosition);
+//   }, []);
 
-  const simulateLeftClick = () => {
-    const clickEvent = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-      clientX: cursorPosition.x,
-      clientY: cursorPosition.y,
-    });
-    document
-      .elementFromPoint(cursorPosition.x, cursorPosition.y)
-      ?.dispatchEvent(clickEvent);
-  };
+//   const simulateLeftClick = () => {
+//     const clickEvent = new MouseEvent('click', {
+//       view: window,
+//       bubbles: true,
+//       cancelable: true,
+//       clientX: cursorPosition.x,
+//       clientY: cursorPosition.y,
+//     });
+//     document
+//       .elementFromPoint(cursorPosition.x, cursorPosition.y)
+//       ?.dispatchEvent(clickEvent);
+//   };
 
-  return <></>;
-};
+//   return <></>;
+// };
 
 export default App;
