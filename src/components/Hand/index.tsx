@@ -6,7 +6,6 @@ import {
   Data,
   lerp,
 } from '@mediapipe/drawing_utils';
-import './index.scss';
 
 const HandsContainer = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
