@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 const App = () => {
@@ -15,12 +14,12 @@ const App = () => {
 
       // Adjust if off screen right
       if (x + contextMenu.offsetWidth > window.innerWidth) {
-        x = window.innerWidth - contextMenu.offsetWidth;
+        x -= contextMenu.offsetWidth;
       }
 
       // Adjust if off screen bottom
       if (y + contextMenu.offsetHeight > window.innerHeight) {
-        y = window.innerHeight - contextMenu.offsetHeight;
+        y -= contextMenu.offsetHeight;
       }
 
       if (contextMenuActive) {
@@ -28,8 +27,8 @@ const App = () => {
       } else {
         contextMenu.style.visibility = 'visible';
         contextMenu.style.position = 'absolute';
-        contextMenu.style.left = `${x}px`;
-        contextMenu.style.top = `${y}px`;
+        contextMenu.style.left = `${x + window.scrollX}px`;
+        contextMenu.style.top = `${y + window.scrollY}px`;
       }
       setContextMenuActive(!contextMenuActive);
     }
@@ -42,9 +41,16 @@ const App = () => {
         <MouseControl />
         <div
           id='context-menu'
-          style={{ display: 'block', visibility: 'hidden' }}>
+          style={{
+            display: 'block',
+            visibility: 'hidden',
+            width: '200px',
+            height: '200px',
+            backgroundColor: 'red',
+          }}>
           Hello World!!!
         </div>
+        <div style={{ height: '1000px' }}></div>
       </body>
     </div>
   );
