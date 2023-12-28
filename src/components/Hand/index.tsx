@@ -14,23 +14,14 @@ const HandsContainer = () => {
   const [loaded, setLoaded] = useState(false);
 
   const inputVideoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
   // webcam control
   useEffect(() => {
     if (!inputVideoReady) {
       return;
     }
-    if (inputVideoRef.current && canvasRef.current) {
+    if (inputVideoRef.current) {
       console.log('rendering');
-      contextRef.current = canvasRef.current.getContext('2d');
-
-      // flip the video horizontally (scale X by -1)
-      if (contextRef.current) {
-        contextRef.current.scale(-1, 1);
-        contextRef.current.translate(-canvasRef.current.width, 0);
-      }
 
       const constraints = {
         video: { width: { min: 1280 }, height: { min: 720 } },
@@ -71,54 +62,31 @@ const HandsContainer = () => {
   }, [inputVideoReady]);
 
   const onResults = (results: Results) => {
-    if (canvasRef.current && contextRef.current) {
-      setLoaded(true);
+    setLoaded(true);
 
-      contextRef.current.save();
-      contextRef.current.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      contextRef.current.drawImage(
-        results.image,
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      if (results.multiHandLandmarks && results.multiHandedness) {
-        for (
-          let index = 0;
-          index < results.multiHandLandmarks.length;
-          index++
-        ) {
-          const classification = results.multiHandedness[index];
-          const isRightHand = classification.label === 'Right';
-          const landmarks = results.multiHandLandmarks[index];
-          drawConnectors(contextRef.current, landmarks, HAND_CONNECTIONS, {
-            color: isRightHand ? '#00FF00' : '#FF0000',
-          });
-          drawLandmarks(contextRef.current, landmarks, {
-            color: isRightHand ? '#00FF00' : '#FF0000',
-            fillColor: isRightHand ? '#FF0000' : '#00FF00',
-            radius: (data: Data) => {
-              return lerp(data.from!.z!, -0.15, 0.1, 10, 1);
-            },
-          });
-        }
+    if (results.multiHandLandmarks) {
+      // using the average of all landmarks
+
+      const landmarks = results.multiHandLandmarks[0];
+      if (!landmarks) return;
+      let x = 0;
+      let y = 0;
+      for (let index = 0; index < landmarks.length; index++) {
+        x += landmarks[index].x! * window.innerWidth;
+        y += landmarks[index].y! * window.innerHeight;
       }
-      if (results.multiHandLandmarks) {
-        const landmarks = results.multiHandLandmarks[0];
-        if (!landmarks || !landmarks[8]) return;
-        let x = landmarks[8].x! * canvasRef.current.width;
-        x = canvasRef.current.width - x;
-        const y = landmarks[8].y! * canvasRef.current.height;
-        setCursorPosition({ x, y });
-        console.log(x, y);
-      }
-      contextRef.current.restore();
+      x /= landmarks.length;
+      y /= landmarks.length;
+      x = window.innerWidth - x;
+
+      // using the index finger
+
+      // const landmarks = results.multiHandLandmarks[0];
+      // if (!landmarks || !landmarks[8]) return;
+      // let x = (1 - landmarks[8].x)! * window.innerWidth;
+      // const y = landmarks[8].y! * window.innerHeight;
+      // setCursorPosition({ x, y });
+      // console.log(x, y);
     }
   };
 
@@ -158,18 +126,6 @@ const HandsContainer = () => {
           setInputVideoReady(!!el);
         }}
       />
-      {/* use screen width and height */}
-      <canvas
-        ref={canvasRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
-      />
-      {!loaded && (
-        <div className='loading'>
-          <div className='spinner'></div>
-          <div className='message'>Loading</div>
-        </div>
-      )}
       <div
         className='cursor'
         style={{
