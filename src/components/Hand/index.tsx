@@ -25,6 +25,7 @@ const HandsContainer = () => {
       const constraints = {
         video: { width: { min: 1280 }, height: { min: 720 } },
       };
+      console.log('inputVideoReady', inputVideoReady);
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         if (inputVideoRef.current) {
           inputVideoRef.current.srcObject = stream;
@@ -61,11 +62,9 @@ const HandsContainer = () => {
   }, [inputVideoReady]);
 
   const onResults = (results: Results) => {
+    console.log(results);
     setLoaded(true);
-
     if (results.multiHandLandmarks) {
-      // using the average of all landmarks
-
       const landmarks = results.multiHandLandmarks[0];
       if (!landmarks) return;
       let x = 0;
@@ -78,14 +77,16 @@ const HandsContainer = () => {
       y /= landmarks.length;
       x = window.innerWidth - x;
 
-      // using the index finger
-
       // const landmarks = results.multiHandLandmarks[0];
       // if (!landmarks || !landmarks[8]) return;
-      // let x = (1 - landmarks[8].x)! * window.innerWidth;
-      // const y = landmarks[8].y! * window.innerHeight;
-      // setCursorPosition({ x, y });
-      // console.log(x, y);
+      // let x = landmarks[8].x! * window.innerWidth;
+      // let y = landmarks[8].y! * window.innerHeight;
+      // x = window.innerWidth - x;
+
+      x += window.scrollX;
+      y += window.scrollY;
+
+      setCursorPosition({ x, y });
     }
   };
 
@@ -119,12 +120,12 @@ const HandsContainer = () => {
     <div className='hands-container'>
       <video
         autoPlay
-        style={{ transform: 'scaleX(-1)' }}
         ref={(el) => {
           inputVideoRef.current = el;
           setInputVideoReady(!!el);
         }}
       />
+
       <div
         className='cursor'
         style={{
