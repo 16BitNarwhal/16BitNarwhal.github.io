@@ -138,6 +138,7 @@ const HandsContainer = () => {
     <div className='hands-container ignore-mouse'>
       <video
         autoPlay
+        style={{ display: 'none' }}
         ref={(el) => {
           inputVideoRef.current = el;
           setInputVideoReady(!!el);
