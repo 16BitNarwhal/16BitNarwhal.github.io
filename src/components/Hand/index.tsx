@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Results, Hands, HAND_CONNECTIONS, VERSION } from '@mediapipe/hands';
 import {
   drawConnectors,
@@ -20,12 +20,9 @@ const HandsContainer = () => {
       return;
     }
     if (inputVideoRef.current) {
-      console.log('rendering');
-
       const constraints = {
         video: { width: { min: 1280 }, height: { min: 720 } },
       };
-      console.log('inputVideoReady', inputVideoReady);
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         if (inputVideoRef.current) {
           inputVideoRef.current.srcObject = stream;
@@ -50,7 +47,6 @@ const HandsContainer = () => {
       const sendToMediaPipe = async () => {
         if (inputVideoRef.current) {
           if (!inputVideoRef.current.videoWidth) {
-            console.log(inputVideoRef.current.videoWidth);
             requestAnimationFrame(sendToMediaPipe);
           } else {
             await hands.send({ image: inputVideoRef.current });
@@ -62,7 +58,6 @@ const HandsContainer = () => {
   }, [inputVideoReady]);
 
   const onResults = (results: Results) => {
-    console.log(results);
     setLoaded(true);
     if (results.multiHandLandmarks) {
       const landmarks = results.multiHandLandmarks[0];
@@ -83,13 +78,9 @@ const HandsContainer = () => {
       // let y = landmarks[8].y! * window.innerHeight;
       // x = window.innerWidth - x;
 
-      x += window.scrollX;
-      y += window.scrollY;
-
       setCursorPosition({ x, y });
     }
   };
-
   // mouse control
   // const updateCursorPosition = (e: MouseEvent) => {
   //   setCursorPosition({
@@ -103,21 +94,35 @@ const HandsContainer = () => {
   //   return () => window.removeEventListener('mousemove', updateCursorPosition);
   // }, []);
 
-  // const simulateLeftClick = () => {
-  //   const clickEvent = new MouseEvent('click', {
-  //     view: window,
-  //     bubbles: true,
-  //     cancelable: true,
-  //     clientX: cursorPosition.x,
-  //     clientY: cursorPosition.y,
-  //   });
-  //   document
-  //     .elementFromPoint(cursorPosition.x, cursorPosition.y)
-  //     ?.dispatchEvent(clickEvent);
-  // };
+  const simulateLeftClick = (position: { x: number; y: number }) => {
+    const clickEvent = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+      clientX: position.x,
+      clientY: position.y,
+    });
+    document
+      .elementFromPoint(position.x, position.y)
+      ?.dispatchEvent(clickEvent);
+  };
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'q') {
+        simulateLeftClick(cursorPosition);
+      }
+    },
+    [cursorPosition]
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
-    <div className='hands-container'>
+    <div className='hands-container ignore-mouse'>
       <video
         autoPlay
         ref={(el) => {
@@ -130,8 +135,8 @@ const HandsContainer = () => {
         className='cursor'
         style={{
           position: 'absolute',
-          left: cursorPosition.x,
-          top: cursorPosition.y,
+          left: cursorPosition.x + window.scrollX,
+          top: cursorPosition.y + window.scrollY,
           fontSize: '50px',
         }}>
         👆

@@ -55,6 +55,11 @@ const App = () => {
           Hello World!!!
         </div>
         <div style={{ height: '1000px' }}></div>
+        <button
+          onClick={() => console.log('clicked')}
+          style={{ width: 100, height: 100 }}>
+          Click me
+        </button>
         <HandsContainer />
       </body>
     </div>
