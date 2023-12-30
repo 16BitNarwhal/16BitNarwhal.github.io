@@ -121,6 +121,19 @@ const HandsContainer = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    document.body.style.cursor = 'none';
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      document.body.style.cursor = 'auto';
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   return (
     <div className='hands-container ignore-mouse'>
       <video
