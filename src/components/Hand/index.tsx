@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Results, Hands, HAND_CONNECTIONS, VERSION } from '@mediapipe/hands';
 import {
-  drawConnectors,
-  drawLandmarks,
-  Data,
-  lerp,
-} from '@mediapipe/drawing_utils';
+  GestureRecognizer,
+  FilesetResolver,
+  GestureRecognizerResult,
+} from '@mediapipe/tasks-vision';
 
 const HandsContainer = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [inputVideoReady, setInputVideoReady] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [gestureRecognizer, setGestureRecognizer] =
+    useState<GestureRecognizer | null>(null);
+  const [lastVideoTime, setLastVideoTime] = useState(-1);
 
   const inputVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -20,67 +20,89 @@ const HandsContainer = () => {
       return;
     }
     if (inputVideoRef.current) {
-      const constraints = {
-        video: { width: { min: 1280 }, height: { min: 720 } },
+      const initGesture = async () => {
+        const vision = await FilesetResolver.forVisionTasks(
+          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
+        );
+        const gr = await GestureRecognizer.createFromOptions(vision, {
+          baseOptions: {
+            modelAssetPath:
+              'https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task',
+            delegate: 'GPU',
+          },
+          runningMode: 'VIDEO',
+        });
+        setGestureRecognizer(gr);
       };
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-        if (inputVideoRef.current) {
-          inputVideoRef.current.srcObject = stream;
-        }
-        sendToMediaPipe();
-      });
-
-      const hands = new Hands({
-        locateFile: (file) =>
-          `https://cdn.jsdelivr.net/npm/@mediapipe/hands@${VERSION}/${file}`,
-      });
-
-      hands.setOptions({
-        maxNumHands: 2,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
-
-      hands.onResults(onResults);
-
-      const sendToMediaPipe = async () => {
-        if (inputVideoRef.current) {
-          if (!inputVideoRef.current.videoWidth) {
-            requestAnimationFrame(sendToMediaPipe);
-          } else {
-            await hands.send({ image: inputVideoRef.current });
-            requestAnimationFrame(sendToMediaPipe);
-          }
-        }
-      };
+      initGesture();
     }
   }, [inputVideoReady]);
 
-  const onResults = (results: Results) => {
-    setLoaded(true);
-    if (results.multiHandLandmarks) {
-      const landmarks = results.multiHandLandmarks[0];
-      if (!landmarks) return;
-      let x = 0;
-      let y = 0;
-      for (let index = 0; index < landmarks.length; index++) {
-        x += landmarks[index].x! * window.innerWidth;
-        y += landmarks[index].y! * window.innerHeight;
+  useEffect(() => {
+    if (!inputVideoReady && !gestureRecognizer) {
+      return;
+    }
+    const constraints = {
+      video: { width: { min: 480 }, height: { min: 360 } },
+    };
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      if (inputVideoRef.current) {
+        inputVideoRef.current.srcObject = stream;
       }
-      x /= landmarks.length;
-      y /= landmarks.length;
+      sendToMediaPipe();
+    });
+    const sendToMediaPipe = async () => {
+      if (inputVideoRef.current) {
+        if (!inputVideoRef.current.videoWidth || !gestureRecognizer) {
+          requestAnimationFrame(sendToMediaPipe);
+          return;
+        }
+        if (inputVideoRef.current.currentTime === lastVideoTime) {
+          requestAnimationFrame(sendToMediaPipe);
+          return;
+        }
+        const results = await gestureRecognizer.recognizeForVideo(
+          inputVideoRef.current,
+          Date.now()
+        );
+        setLastVideoTime(inputVideoRef.current.currentTime);
+        processResults(results);
+        requestAnimationFrame(sendToMediaPipe);
+      }
+    };
+  }, [gestureRecognizer]);
+
+  const processResults = (results: GestureRecognizerResult) => {
+    if (results.gestures && results.gestures[0] && results.gestures[0][0]) {
+      const gesture = results.gestures[0][0];
+      // console.log(gesture.categoryName);
+      // if (gesture.categoryName === 'Closed_Fist') {
+      //   simulateLeftClick(cursorPosition);
+      // }
+    }
+    if (results.landmarks && results.landmarks[0]) {
+      const landmarks = results.landmarks[0];
+      if (!landmarks) return;
+      let x = 0,
+        y = 0;
+
+      for (let index = 0; index < landmarks.length; index++) {
+        x += landmarks[index].x;
+        y += landmarks[index].y;
+      }
+      x *= window.innerWidth / landmarks.length;
+      y *= window.innerHeight / landmarks.length;
       x = window.innerWidth - x;
 
-      // const landmarks = results.multiHandLandmarks[0];
+      setCursorPosition({ x, y });
+
       // if (!landmarks || !landmarks[8]) return;
       // let x = landmarks[8].x! * window.innerWidth;
       // let y = landmarks[8].y! * window.innerHeight;
       // x = window.innerWidth - x;
-
-      setCursorPosition({ x, y });
     }
   };
+
   // mouse control
   // const updateCursorPosition = (e: MouseEvent) => {
   //   setCursorPosition({
@@ -138,7 +160,7 @@ const HandsContainer = () => {
     <div className='hands-container ignore-mouse'>
       <video
         autoPlay
-        style={{ display: 'none' }}
+        // style={{ display: 'none' }}
         ref={(el) => {
           inputVideoRef.current = el;
           setInputVideoReady(!!el);
