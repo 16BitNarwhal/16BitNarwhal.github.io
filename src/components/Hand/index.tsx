@@ -10,7 +10,8 @@ const HandsContainer = () => {
   const [inputVideoReady, setInputVideoReady] = useState(false);
   const [gestureRecognizer, setGestureRecognizer] =
     useState<GestureRecognizer | null>(null);
-  const [lastVideoTime, setLastVideoTime] = useState(-1);
+
+  const lastVideoTimeRef = useRef(-1);
 
   const inputVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -57,7 +58,7 @@ const HandsContainer = () => {
           requestAnimationFrame(sendToMediaPipe);
           return;
         }
-        if (inputVideoRef.current.currentTime === lastVideoTime) {
+        if (inputVideoRef.current.currentTime === lastVideoTimeRef.current) {
           requestAnimationFrame(sendToMediaPipe);
           return;
         }
@@ -65,41 +66,53 @@ const HandsContainer = () => {
           inputVideoRef.current,
           Date.now()
         );
-        setLastVideoTime(inputVideoRef.current.currentTime);
+        lastVideoTimeRef.current = inputVideoRef.current.currentTime;
         processResults(results);
         requestAnimationFrame(sendToMediaPipe);
       }
     };
   }, [gestureRecognizer]);
 
+  const isFistClosedRef = useRef(false);
+
+  const indices = [0, 5, 9, 13, 17]; // palm indices
   const processResults = (results: GestureRecognizerResult) => {
-    if (results.gestures && results.gestures[0] && results.gestures[0][0]) {
-      const gesture = results.gestures[0][0];
-      // console.log(gesture.categoryName);
-      // if (gesture.categoryName === 'Closed_Fist') {
-      //   simulateLeftClick(cursorPosition);
-      // }
-    }
-    if (results.landmarks && results.landmarks[0]) {
-      const landmarks = results.landmarks[0];
-      if (!landmarks) return;
-      let x = 0,
-        y = 0;
+    let x = 0;
+    let y = 0;
+    if (!results.landmarks) return;
+    if (!results.landmarks[0]) return;
+    const landmarks = results.landmarks[0];
+    if (!landmarks) return;
+    indices.forEach((i) => {
+      x += landmarks[i].x;
+      y += landmarks[i].y;
+    });
+    // for (let i = 0; i < landmarks.length; i++) {
+    //   x += landmarks[i].x;
+    //   y += landmarks[i].y;
+    // }
+    x *= window.innerWidth / indices.length;
+    y *= window.innerHeight / indices.length;
+    x = window.innerWidth - x;
 
-      for (let index = 0; index < landmarks.length; index++) {
-        x += landmarks[index].x;
-        y += landmarks[index].y;
+    setCursorPosition({ x, y });
+
+    // if (!landmarks || !landmarks[8]) return;
+    // let x = landmarks[8].x! * window.innerWidth;
+    // let y = landmarks[8].y! * window.innerHeight;
+    // x = window.innerWidth - x;
+
+    if (!results.gestures) return;
+    if (!results.gestures[0]) return;
+    if (!results.gestures[0][0]) return;
+    const gesture = results.gestures[0][0];
+    if (gesture.categoryName === 'Closed_Fist') {
+      if (!isFistClosedRef.current) {
+        simulateLeftClick({ x, y });
+        isFistClosedRef.current = true;
       }
-      x *= window.innerWidth / landmarks.length;
-      y *= window.innerHeight / landmarks.length;
-      x = window.innerWidth - x;
-
-      setCursorPosition({ x, y });
-
-      // if (!landmarks || !landmarks[8]) return;
-      // let x = landmarks[8].x! * window.innerWidth;
-      // let y = landmarks[8].y! * window.innerHeight;
-      // x = window.innerWidth - x;
+    } else {
+      isFistClosedRef.current = false;
     }
   };
 

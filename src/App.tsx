@@ -41,9 +41,9 @@ const App = () => {
 
   return (
     <div className='App' onContextMenu={handleContextMenu}>
-      {/* <Header /> */}
+      <Header />
       <div>
-        {/* <div
+        <div
           id='context-menu'
           style={{
             display: 'block',
@@ -56,10 +56,10 @@ const App = () => {
         </div>
         <div style={{ height: '1000px' }}></div>
         <button
-          onClick={() => console.log('clicked')}
+          onClick={() => console.log('clicked button')}
           style={{ width: 100, height: 100 }}>
           Click me
-        </button> */}
+        </button>
         <HandsContainer />
       </div>
     </div>
