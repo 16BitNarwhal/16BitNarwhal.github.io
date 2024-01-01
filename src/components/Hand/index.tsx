@@ -81,6 +81,7 @@ const HandsContainer = () => {
   const isHandClickGesture = useRef(false);
   const isHandContextGesture = useRef(false);
   const lastRightClickTime = useRef(0);
+  const lastElementHovered = useRef<Element | null>(null);
 
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const processResults = (results: GestureRecognizerResult) => {
@@ -103,6 +104,18 @@ const HandsContainer = () => {
     x = window.innerWidth - x;
 
     setCursorPosition({ x, y });
+
+    const element: Element | null = document.elementFromPoint(x, y);
+    if (lastElementHovered.current !== element) {
+      const prev: Element | null = lastElementHovered.current as Element | null;
+      if (prev) {
+        prev.className = prev.className.replace(' hover', '');
+      }
+      if (element) {
+        element.className += ' hover';
+        lastElementHovered.current = element;
+      }
+    }
 
     // if (!landmarks || !landmarks[8]) return;
     // let x = landmarks[8].x! * window.innerWidth;
