@@ -80,6 +80,7 @@ const HandsContainer = () => {
 
   const isHandClickGesture = useRef(false);
   const isHandContextGesture = useRef(false);
+  const lastRightClickTime = useRef(0);
 
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const processResults = (results: GestureRecognizerResult) => {
@@ -120,6 +121,7 @@ const HandsContainer = () => {
     } else {
       isHandClickGesture.current = false;
     }
+    if (Date.now() - lastRightClickTime.current < 1000) return;
     if (gesture.categoryName === 'ILoveYou') {
       if (!isHandContextGesture.current) {
         simulateClick({ x, y }, Click.right);
@@ -144,6 +146,7 @@ const HandsContainer = () => {
   // }, []);
 
   const simulateClick = (position: { x: number; y: number }, type: Click) => {
+    lastRightClickTime.current = Date.now();
     const clickEvent = new MouseEvent(type, {
       view: window,
       bubbles: true,
@@ -151,9 +154,16 @@ const HandsContainer = () => {
       clientX: position.x,
       clientY: position.y,
     });
-    document
-      .elementFromPoint(position.x, position.y)
-      ?.dispatchEvent(clickEvent);
+    const element: Element | null = document.elementFromPoint(
+      position.x,
+      position.y
+    );
+    if (!element) return;
+    element.dispatchEvent(clickEvent);
+    element.className += ' click';
+    setTimeout(() => {
+      element.className = element.className.replace(' click', '');
+    }, 100);
   };
 
   const handleKeyDown = useCallback(
