@@ -82,7 +82,6 @@ const HandsContainer = () => {
   const isHandContextGesture = useRef(false);
   const lastRightClickTime = useRef(0);
   const lastElementHovered = useRef<Element | null>(null);
-
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
@@ -95,15 +94,28 @@ const HandsContainer = () => {
       x += landmarks[i].x;
       y += landmarks[i].y;
     });
-    // for (let i = 0; i < landmarks.length; i++) {
-    //   x += landmarks[i].x;
-    //   y += landmarks[i].y;
-    // }
-    x *= window.innerWidth / indices.length;
-    y *= window.innerHeight / indices.length;
+
+    x /= indices.length;
+    y /= indices.length;
+
+    let scrollSpeed = 0;
+    if (y < 0.15) {
+      scrollSpeed = (0.15 - y) / 0.15;
+      scrollSpeed = scrollSpeed * 30 + 5;
+      scrollSpeed *= -1;
+    } else if (y > 0.8) {
+      scrollSpeed = (y - 0.8) / 0.2;
+      scrollSpeed = scrollSpeed * 30 + 5;
+    }
+
+    x *= window.innerWidth;
+    y *= window.innerHeight;
     x = window.innerWidth - x;
 
     setCursorPosition({ x, y });
+    if (scrollSpeed !== 0) {
+      window.scrollBy(0, scrollSpeed);
+    }
 
     const element: Element | null = document.elementFromPoint(x, y);
     if (lastElementHovered.current !== element) {
@@ -116,11 +128,6 @@ const HandsContainer = () => {
         lastElementHovered.current = element;
       }
     }
-
-    // if (!landmarks || !landmarks[8]) return;
-    // let x = landmarks[8].x! * window.innerWidth;
-    // let y = landmarks[8].y! * window.innerHeight;
-    // x = window.innerWidth - x;
 
     if (!results.gestures) return;
     if (!results.gestures[0]) return;
@@ -220,9 +227,9 @@ const HandsContainer = () => {
       <div
         className='cursor'
         style={{
-          position: 'absolute',
-          left: cursorPosition.x + window.scrollX,
-          top: cursorPosition.y + window.scrollY,
+          position: 'fixed',
+          left: cursorPosition.x,
+          top: cursorPosition.y,
           fontSize: '50px',
         }}>
         👆
