@@ -201,15 +201,17 @@ const HandsContainer = () => {
   }, [handleKeyDown]);
 
   useEffect(() => {
-    document.body.style.cursor = 'none';
     const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
     };
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      document.body.style.cursor = 'auto';
       window.removeEventListener('mousemove', handleMouseMove);
+      const prev: Element | null = lastElementHovered.current as Element | null;
+      if (prev) {
+        prev.className = prev.className.replace(' hover', '');
+      }
     };
   }, []);
 
@@ -217,7 +219,7 @@ const HandsContainer = () => {
     <div className='hands-container ignore-mouse'>
       <video
         autoPlay
-        // style={{ display: 'none' }}
+        style={{ display: 'none' }}
         ref={(el) => {
           inputVideoRef.current = el;
           setInputVideoReady(!!el);

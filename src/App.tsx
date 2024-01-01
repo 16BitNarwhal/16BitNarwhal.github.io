@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-
-import Webcam from 'react-webcam';
-import { Hands } from '@mediapipe/hands';
-
 import HandsContainer from './components/Hand';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
+  const [isGesture, setIsGesture] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,6 +36,25 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    const stylesheet = document.styleSheets[0];
+    if (isGesture) stylesheet.insertRule('* { cursor: none !important; }');
+    else {
+      let ruleIndex = -1;
+      for (let i = 0; i < stylesheet.cssRules.length; i++) {
+        if (
+          stylesheet.cssRules[i].cssText.startsWith(
+            '* { cursor: none !important; }'
+          )
+        ) {
+          ruleIndex = i;
+          break;
+        }
+      }
+      if (ruleIndex !== -1) stylesheet.deleteRule(ruleIndex);
+    }
+  }, [isGesture]);
+
   return (
     <div className='App' onContextMenu={handleContextMenu}>
       <Header />
@@ -56,12 +72,19 @@ const App = () => {
         </div>
         <div style={{ height: '1000px' }}></div>
         <button
-          onClick={() => console.log('clicked button')}
+          onClick={() => setIsGesture(!isGesture)}
           className='test'
           style={{ width: 100, height: 100 }}>
           Click me
         </button>
-        <HandsContainer />
+        {isGesture ? (
+          <div>
+            <HandsContainer />
+            <p>Gesture</p>
+          </div>
+        ) : (
+          <p>Not Gesture</p>
+        )}
       </div>
     </div>
   );
