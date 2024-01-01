@@ -152,19 +152,6 @@ const HandsContainer = () => {
     }
   };
 
-  // mouse control
-  // const updateCursorPosition = (e: MouseEvent) => {
-  //   setCursorPosition({
-  //     x: e.clientX + window.scrollX,
-  //     y: e.clientY + window.scrollY,
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('mousemove', updateCursorPosition);
-  //   return () => window.removeEventListener('mousemove', updateCursorPosition);
-  // }, []);
-
   const simulateClick = (position: { x: number; y: number }, type: Click) => {
     lastRightClickTime.current = Date.now();
     const clickEvent = new MouseEvent(type, {
