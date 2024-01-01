@@ -5,6 +5,11 @@ import {
   GestureRecognizerResult,
 } from '@mediapipe/tasks-vision';
 
+enum Click {
+  left = 'click',
+  right = 'contextmenu',
+}
+
 const HandsContainer = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [inputVideoReady, setInputVideoReady] = useState(false);
@@ -73,7 +78,8 @@ const HandsContainer = () => {
     };
   }, [gestureRecognizer]);
 
-  const isFistClosedRef = useRef(false);
+  const isHandClickGesture = useRef(false);
+  const isHandContextGesture = useRef(false);
 
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const processResults = (results: GestureRecognizerResult) => {
@@ -107,12 +113,20 @@ const HandsContainer = () => {
     if (!results.gestures[0][0]) return;
     const gesture = results.gestures[0][0];
     if (gesture.categoryName === 'Closed_Fist') {
-      if (!isFistClosedRef.current) {
-        simulateLeftClick({ x, y });
-        isFistClosedRef.current = true;
+      if (!isHandClickGesture.current) {
+        simulateClick({ x, y }, Click.left);
+        isHandClickGesture.current = true;
       }
     } else {
-      isFistClosedRef.current = false;
+      isHandClickGesture.current = false;
+    }
+    if (gesture.categoryName === 'ILoveYou') {
+      if (!isHandContextGesture.current) {
+        simulateClick({ x, y }, Click.right);
+        isHandContextGesture.current = true;
+      }
+    } else {
+      isHandContextGesture.current = false;
     }
   };
 
@@ -129,8 +143,8 @@ const HandsContainer = () => {
   //   return () => window.removeEventListener('mousemove', updateCursorPosition);
   // }, []);
 
-  const simulateLeftClick = (position: { x: number; y: number }) => {
-    const clickEvent = new MouseEvent('click', {
+  const simulateClick = (position: { x: number; y: number }, type: Click) => {
+    const clickEvent = new MouseEvent(type, {
       view: window,
       bubbles: true,
       cancelable: true,
@@ -145,7 +159,7 @@ const HandsContainer = () => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'q') {
-        simulateLeftClick(cursorPosition);
+        simulateClick(cursorPosition, Click.left);
       }
     },
     [cursorPosition]
