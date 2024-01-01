@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 
 import HandsContainer from './components/Hand';
@@ -62,48 +62,49 @@ const App = () => {
     }
   }, [isGesture]);
 
-  useEffect(() => {
-    const element = document.getElementById('header');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+  // // scroll to header
+  // useEffect(() => {
+  //   if (window.location.hash === '') return;
+  //   const element = document.getElementById('header');
+  //   if (element) {
+  //     element.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, []);
 
   return (
-    <div className='App' onContextMenu={handleContextMenu}>
-      <button
-        onClick={() => setIsGesture(!isGesture)}
-        className='test'
-        style={{
-          position: 'absolute',
-          left: 10,
-          top: 10,
-          width: 100,
-          height: 100,
-        }}>
-        Click me
-      </button>
-      {isGesture ? <HandsContainer /> : <></>}
-      <Header />
-      <div
-        id='context-menu'
-        style={{
-          position: 'fixed',
-          display: 'flex',
-          visibility: 'hidden',
-          width: '200px',
-          height: '200px',
-          backgroundColor: 'red',
-          flexDirection: 'column',
-        }}>
-        <p>Context Menu</p>
-        <a href='/projects#header'>Projects</a>
-        <a href='/interests#header'>Interests</a>
-        <a href='/achievements#header'>Achievements</a>
-        <a href='/socials#header'>Socials</a>
-      </div>
-      <div className='App-body'>
-        <Router>
+    <BrowserRouter>
+      <div className='App' onContextMenu={handleContextMenu}>
+        <button
+          onClick={() => setIsGesture(!isGesture)}
+          className='test'
+          style={{
+            position: 'absolute',
+            left: 10,
+            top: 10,
+            width: 100,
+            height: 100,
+          }}>
+          Click me
+        </button>
+        <Header />
+        <div
+          id='context-menu'
+          style={{
+            position: 'fixed',
+            display: 'flex',
+            visibility: 'hidden',
+            width: '200px',
+            height: '200px',
+            backgroundColor: 'red',
+            flexDirection: 'column',
+          }}>
+          <p>Context Menu</p>
+          <Link to={{ pathname: '/projects' }}>Projects</Link>
+          <Link to={{ pathname: '/interests' }}>Interests</Link>
+          <Link to={{ pathname: '/achievements' }}>Achievements</Link>
+          <Link to={{ pathname: '/socials' }}>Socials</Link>
+        </div>
+        <div className='App-body'>
           <Routes>
             <Route path='/projects' element={<Projects />} />
             <Route path='/interests' element={<Interests />} />
@@ -111,9 +112,10 @@ const App = () => {
             <Route path='/socials' element={<Socials />} />
             <Route path='/' element={<Projects />} />
           </Routes>
-        </Router>
+        </div>
+        {isGesture ? <HandsContainer /> : <></>}
       </div>
-    </div>
+    </BrowserRouter>
   );
 };
 
