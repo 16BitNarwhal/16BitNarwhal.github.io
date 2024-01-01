@@ -28,9 +28,9 @@ const App = () => {
         contextMenu.style.visibility = 'hidden';
       } else {
         contextMenu.style.visibility = 'visible';
-        contextMenu.style.position = 'absolute';
-        contextMenu.style.left = `${x + window.scrollX}px`;
-        contextMenu.style.top = `${y + window.scrollY}px`;
+        contextMenu.style.position = 'fixed';
+        contextMenu.style.left = `${x}px`;
+        contextMenu.style.top = `${y}px`;
       }
       setContextMenuActive(!contextMenuActive);
     }
