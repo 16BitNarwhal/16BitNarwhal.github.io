@@ -122,10 +122,13 @@ const HandsContainer = () => {
     if (lastElementHovered.current !== element) {
       const prev: Element | null = lastElementHovered.current as Element | null;
       if (prev) {
-        prev.className = prev.className.replace(' hover', '');
+        let parent: Element | null = prev;
+        while (parent) {
+          parent.className = parent.className.replace(' hover', '');
+          parent = parent.parentElement;
+        }
       }
       if (element) {
-        element.className += ' hover';
         // any parent element with class clickable
         let isClickable = false;
         let parent: Element | null = element;
@@ -135,11 +138,12 @@ const HandsContainer = () => {
             parent.tagName === 'BUTTON' ||
             parent.tagName === 'A'
           ) {
+            parent.className += ' hover';
             isClickable = true;
-            break;
           }
           parent = parent.parentElement;
         }
+        console.log(element);
         setIsHoveringClickable(isClickable);
         lastElementHovered.current = element;
       }

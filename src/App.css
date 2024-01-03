@@ -17,7 +17,8 @@
   pointer-events: none;
 }
 
-button.hover,
+.clickable.hover,
+.clickable:hover,
 button:hover {
   animation: hoverAnimation 0.7s infinite alternate linear;
 }
@@ -31,7 +32,8 @@ button:hover {
   }
 }
 
-button.click,
+.clickable.click,
+.clickable:active,
 button:active {
   animation: clickAnimation 0.15s;
 }

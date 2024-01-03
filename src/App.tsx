@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-import HandsContainer from './components/Hand';
-
 import Projects from './pages/Projects';
 import Interests from './pages/Interests';
 import Achievements from './pages/Achievements';
+
+import HandsContainer from './components/Hand';
+import ContextMenu from './components/ContextMenu';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
@@ -60,19 +61,10 @@ const App = () => {
     }
   }, [isGesture]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const element = document.getElementById(e.currentTarget.hash.slice(1));
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className='App' onContextMenu={handleContextMenu}>
       <button
         onClick={() => setIsGesture(!isGesture)}
-        className='test'
         style={{
           position: 'fixed',
           top: '50%',
@@ -93,30 +85,7 @@ const App = () => {
         <b>Click me!</b>
       </button>
       <Header />
-      <div
-        id='context-menu'
-        style={{
-          position: 'fixed',
-          display: 'flex',
-          visibility: 'hidden',
-          width: '200px',
-          height: '200px',
-          flexDirection: 'column',
-        }}>
-        <p>Context Menu</p>
-        <a href='#header' onClick={handleNavClick}>
-          Top
-        </a>
-        <a href='#projects' onClick={handleNavClick}>
-          Projects
-        </a>
-        <a href='#interests' onClick={handleNavClick}>
-          Interests
-        </a>
-        <a href='#achievements' onClick={handleNavClick}>
-          Achievements
-        </a>
-      </div>
+      <ContextMenu />
       <div className='App-body'>
         <Projects />
         <Interests />
