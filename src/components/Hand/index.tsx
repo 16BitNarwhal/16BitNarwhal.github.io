@@ -78,6 +78,7 @@ const HandsContainer = () => {
     };
   }, [gestureRecognizer]);
 
+  const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const isHandClickGesture = useRef(false);
   const isHandContextGesture = useRef(false);
   const lastRightClickTime = useRef(0);
@@ -125,6 +126,21 @@ const HandsContainer = () => {
       }
       if (element) {
         element.className += ' hover';
+        // any parent element with class clickable
+        let isClickable = false;
+        let parent: Element | null = element;
+        while (parent) {
+          if (
+            parent.className.includes('clickable') ||
+            parent.tagName === 'BUTTON' ||
+            parent.tagName === 'A'
+          ) {
+            isClickable = true;
+            break;
+          }
+          parent = parent.parentElement;
+        }
+        setIsHoveringClickable(isClickable);
         lastElementHovered.current = element;
       }
     }
@@ -221,7 +237,7 @@ const HandsContainer = () => {
           top: cursorPosition.y,
           fontSize: '50px',
         }}>
-        👆
+        {isHoveringClickable ? '👆' : '🤚'}
       </div>
     </div>
   );
