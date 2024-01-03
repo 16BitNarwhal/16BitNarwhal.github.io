@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import ProjectDetails from './projectdetails';
-
-interface Project {
-  title: string;
-  image: string;
-  description: string;
-  url: string;
-  github: string;
-  techStack: string[];
-  alignment: 'left' | 'right';
-}
+import Project from './projectinterface';
 
 const ProjectCard = ({ project }: { project: Project }) => {
   const [isDetailsOpen, setDetailsOpen] = useState(false);

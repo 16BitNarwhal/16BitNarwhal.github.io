@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-interface Project {
-  title: string;
-  image: string;
-  description: string;
-  url: string;
-  github: string;
-  techStack: string[];
-  alignment: 'left' | 'right';
-}
+import Project from './projectinterface';
 
 interface ProjectDetailsProps {
   project: Project;
