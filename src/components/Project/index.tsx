@@ -27,6 +27,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           overflow: 'hidden',
           width: '300px',
           alignSelf: project.alignment == 'left' ? 'flex-start' : 'flex-end',
+          boxShadow: '4px 6px 5px rgba(0, 0, 0, 0.2)',
         }}
         onClick={handleCardClick}>
         <img

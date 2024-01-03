@@ -36,6 +36,8 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
           border: '2px solid #ddd',
           transition: 'transform 0.2s',
           transformOrigin: 'center',
+          boxShadow: '16px 20px 24px rgba(0, 0, 0, 0.2)',
+          zIndex: 100,
         }}>
         <div>
           <h2>{project.title}</h2>

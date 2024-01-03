@@ -240,6 +240,7 @@ const HandsContainer = () => {
           left: cursorPosition.x,
           top: cursorPosition.y,
           fontSize: '50px',
+          zIndex: 999,
         }}>
         {isHoveringClickable ? '👆' : '🤚'}
       </div>
