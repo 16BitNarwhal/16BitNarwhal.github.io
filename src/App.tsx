@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 
 import HandsContainer from './components/Hand';
@@ -7,7 +6,6 @@ import HandsContainer from './components/Hand';
 import Projects from './pages/Projects';
 import Interests from './pages/Interests';
 import Achievements from './pages/Achievements';
-import Socials from './pages/Socials';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
@@ -62,66 +60,67 @@ const App = () => {
     }
   }, [isGesture]);
 
-  // // scroll to header
-  // useEffect(() => {
-  //   if (window.location.hash === '') return;
-  //   const element = document.getElementById('header');
-  //   if (element) {
-  //     element.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }, []);
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const element = document.getElementById(e.currentTarget.hash.slice(1));
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <BrowserRouter>
-      <div className='App' onContextMenu={handleContextMenu}>
-        <button
-          onClick={() => setIsGesture(!isGesture)}
-          className='test'
-          style={{
-            position: 'absolute',
-            left: 10,
-            top: 10,
-            width: 100,
-            height: 100,
-          }}>
-          Click me
-        </button>
-        <Header />
-        <div
-          id='context-menu'
-          style={{
-            position: 'fixed',
-            display: 'flex',
-            visibility: 'hidden',
-            width: '200px',
-            height: '200px',
-            backgroundColor: 'red',
-            flexDirection: 'column',
-          }}>
-          <p>Context Menu</p>
-          <Link to={{ pathname: '/projects' }}>Projects</Link>
-          <Link to={{ pathname: '/interests' }}>Interests</Link>
-          <Link to={{ pathname: '/achievements' }}>Achievements</Link>
-          <Link to={{ pathname: '/socials' }}>Socials</Link>
-        </div>
-        <div className='App-body'>
-          <Routes>
-            <Route path='/projects' element={<Projects />} />
-            <Route path='/interests' element={<Interests />} />
-            <Route path='/achievements' element={<Achievements />} />
-            <Route path='/socials' element={<Socials />} />
-            <Route path='/' element={<Projects />} />
-          </Routes>
-        </div>
-        {isGesture ? <HandsContainer /> : <></>}
+    <div className='App' onContextMenu={handleContextMenu}>
+      <button
+        onClick={() => setIsGesture(!isGesture)}
+        className='test'
+        style={{
+          position: 'absolute',
+          left: 10,
+          top: 10,
+          width: 100,
+          height: 100,
+        }}>
+        Click me
+      </button>
+      <Header />
+      <div
+        id='context-menu'
+        style={{
+          position: 'fixed',
+          display: 'flex',
+          visibility: 'hidden',
+          width: '200px',
+          height: '200px',
+          backgroundColor: 'red',
+          flexDirection: 'column',
+        }}>
+        <p>Context Menu</p>
+        <a href='#header' onClick={handleNavClick}>
+          Top
+        </a>
+        <a href='#projects' onClick={handleNavClick}>
+          Projects
+        </a>
+        <a href='#interests' onClick={handleNavClick}>
+          Interests
+        </a>
+        <a href='#achievements' onClick={handleNavClick}>
+          Achievements
+        </a>
       </div>
-    </BrowserRouter>
+      <div className='App-body'>
+        <Projects />
+        <Interests />
+        <Achievements />
+      </div>
+      {isGesture ? <HandsContainer /> : <></>}
+    </div>
   );
 };
 
 const Header = () => {
   return (
-    <div className='App-header'>
+    <div id='header' className='App-header'>
       {/* headshot, when clicked/waved switches to 16bitnarwhal */}
       <h1>Eric Zhang</h1>
       <p>Software Engineer, Creator, Learner</p>

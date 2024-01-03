@@ -3,16 +3,18 @@ import ProjectCard from '../../components/Project';
 
 const Projects = () => {
   return (
-    <div>
+    <div id='projects'>
       <h1 id='header'>Projects</h1>
       {/* fill out sample ProjectCards */}
       <div
         className='projects-container'
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
-          gap: '20px',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          gap: '60px 100px',
           margin: 'auto 20vw',
         }}>
         <ProjectCard
