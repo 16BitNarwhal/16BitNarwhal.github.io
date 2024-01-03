@@ -74,13 +74,23 @@ const App = () => {
         onClick={() => setIsGesture(!isGesture)}
         className='test'
         style={{
-          position: 'absolute',
-          left: 10,
-          top: 10,
-          width: 100,
-          height: 100,
+          position: 'fixed',
+          top: '50%',
+          left: 0,
+          transform: 'translateY(-50%)',
+          width: '100px',
+          height: '100px',
+          borderRadius: '0 50% 50% 0',
+          backgroundColor: '#DC143C',
+          color: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          cursor: 'pointer',
+          border: 'none',
         }}>
-        Click me
+        <b>Click me!</b>
       </button>
       <Header />
       <div
@@ -91,7 +101,6 @@ const App = () => {
           visibility: 'hidden',
           width: '200px',
           height: '200px',
-          backgroundColor: 'red',
           flexDirection: 'column',
         }}>
         <p>Context Menu</p>
