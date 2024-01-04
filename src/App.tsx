@@ -62,37 +62,40 @@ const App = () => {
   }, [isGesture]);
 
   return (
-    <div className='App' onContextMenu={handleContextMenu}>
-      <button
-        onClick={() => setIsGesture(!isGesture)}
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: 0,
-          transform: 'translateY(-50%)',
-          width: '100px',
-          height: '100px',
-          borderRadius: '0 50% 50% 0',
-          backgroundColor: '#DC143C',
-          color: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          cursor: 'pointer',
-          border: 'none',
-          zIndex: 100,
-        }}>
-        <b>Click me!</b>
-      </button>
-      <Header />
-      <ContextMenu />
-      <div className='App-body'>
-        <Projects />
-        <Interests />
-        <Achievements />
+    <div id='paint-on'>
+      <div className='App' onContextMenu={handleContextMenu}>
+        <button
+          onClick={() => setIsGesture(!isGesture)}
+          style={{
+            position: 'fixed',
+            top: '50%',
+            right: 0,
+            transform: 'translateY(-50%)',
+            width: '100px',
+            height: '100px',
+            borderRadius: '50% 0 0 50%',
+            backgroundColor: 'rgba(255, 255, 100, 0.5)',
+            boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
+            color: '#000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            cursor: 'pointer',
+            border: 'none',
+            zIndex: 100,
+          }}>
+          <b>Click me!</b>
+        </button>
+        <Header />
+        <ContextMenu />
+        <div className='App-body'>
+          <Projects />
+          <Interests />
+          {/* <Achievements /> */}
+        </div>
+        {isGesture ? <HandsContainer /> : <></>}
       </div>
-      {isGesture ? <HandsContainer /> : <></>}
     </div>
   );
 };

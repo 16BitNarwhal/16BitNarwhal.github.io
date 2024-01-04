@@ -4,6 +4,7 @@ import {
   FilesetResolver,
   GestureRecognizerResult,
 } from '@mediapipe/tasks-vision';
+import './style.css';
 
 enum Click {
   left = 'click',
@@ -78,12 +79,75 @@ const HandsContainer = () => {
     };
   }, [gestureRecognizer]);
 
+  // paint splatter effect
+  const body = document.body;
+
+  const splatterColors = [
+    '#ff0000',
+    '#00ff00',
+    '#0000ff',
+    '#ffff00',
+    '#ff00ff',
+    '#00ffff',
+  ];
+  const splatterRange = 100;
+
+  const createSplatterElement = (x: number, y: number, size: number) => {
+    const splatter = document.createElement('div');
+    splatter.classList.add('splatter');
+
+    const randomRotation = Math.floor(Math.random() * 360);
+    const randomOpacity = Math.random() * 0.5 + 0.5;
+    const randomColor =
+      splatterColors[Math.floor(Math.random() * splatterColors.length)];
+
+    let newX = x + (2 * Math.random() - 1) * splatterRange + 10;
+    newX -= size / 2;
+    let newY = y + (2 * Math.random() - 1) * splatterRange + 20;
+    newY += window.scrollY - size / 2;
+
+    splatter.style.width = `${size}px`;
+    splatter.style.height = `${size}px`;
+    splatter.style.left = `${newX}px`;
+    splatter.style.top = `${newY}px`;
+    splatter.style.transform = `rotate(${randomRotation}deg)`;
+    splatter.style.backgroundColor = randomColor;
+    splatter.style.opacity = `${randomOpacity}`;
+    splatter.style.color = randomColor;
+
+    body.appendChild(splatter);
+
+    setTimeout(() => {
+      splatter.remove();
+    }, Math.random() * 5000 + 5000);
+  };
+
+  const createSplatter = ({ x, y }: { x: number; y: number }) => {
+    let splatterCount = Math.floor(Math.random() * 10) + 5;
+    let bigSplatterCount = Math.floor(Math.random() * 2) + 1;
+
+    while (splatterCount > 0) {
+      const size = Math.floor(Math.random() * 20) + 10;
+      createSplatterElement(x, y, size);
+      splatterCount--;
+    }
+    while (bigSplatterCount > 0) {
+      const size = Math.floor(Math.random() * 100) + 50;
+      createSplatterElement(x, y, size);
+      bigSplatterCount--;
+    }
+  };
+
+  // cursor control
   const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const isHandClickGesture = useRef(false);
   const isHandContextGesture = useRef(false);
   const lastRightClickTime = useRef(0);
   const lastElementHovered = useRef<Element | null>(null);
   const indices = [0, 5, 9, 13, 17]; // palm indices
+  const prevCursorPosition = useRef({ x: 0, y: 0 });
+  const lastSplatterTime = useRef(0);
+  const splatterWaitTime = useRef(0);
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
     let y = 0;
@@ -114,6 +178,16 @@ const HandsContainer = () => {
     x = window.innerWidth - x;
 
     setCursorPosition({ x, y });
+
+    if (Date.now() - lastSplatterTime.current > 700) {
+      createSplatter({ x, y });
+      prevCursorPosition.current = { x, y };
+      lastSplatterTime.current = Date.now();
+      splatterWaitTime.current = Math.random() * 1000 + 500;
+    }
+
+    prevCursorPosition.current = { x, y };
+
     if (scrollSpeed !== 0) {
       window.scrollBy(0, scrollSpeed);
     }
