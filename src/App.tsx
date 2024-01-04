@@ -81,6 +81,7 @@ const App = () => {
           textAlign: 'center',
           cursor: 'pointer',
           border: 'none',
+          zIndex: 100,
         }}>
         <b>Click me!</b>
       </button>

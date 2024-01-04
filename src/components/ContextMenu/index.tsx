@@ -14,6 +14,7 @@ const ContextMenu = () => {
         gap: '5px',
         backgroundColor: '#fff',
         borderRadius: '10px',
+        zIndex: 888,
       }}>
       <ContextLink href='#header' text='Top' />
       <ContextLink href='#projects' text='Projects' />
