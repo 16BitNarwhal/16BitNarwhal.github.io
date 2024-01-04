@@ -148,6 +148,7 @@ const HandsContainer = () => {
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
   const splatterWaitTime = useRef(0);
+  const lastFrameTime = useRef(0);
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
     let y = 0;
@@ -179,7 +180,14 @@ const HandsContainer = () => {
 
     setCursorPosition({ x, y });
 
-    if (Date.now() - lastSplatterTime.current > 700) {
+    const cursorSpeed =
+      Math.sqrt(
+        Math.pow(x - prevCursorPosition.current.x, 2) +
+          Math.pow(y - prevCursorPosition.current.y, 2)
+      ) /
+      (Date.now() - lastFrameTime.current);
+    lastFrameTime.current = Date.now();
+    if (Date.now() - lastSplatterTime.current > 50 && cursorSpeed > 0.5) {
       createSplatter({ x, y });
       prevCursorPosition.current = { x, y };
       lastSplatterTime.current = Date.now();
