@@ -12,14 +12,13 @@ const ContextMenu = () => {
         padding: '5px',
         flexDirection: 'column',
         gap: '5px',
-        backgroundColor: '#fff',
         borderRadius: '10px',
         zIndex: 888,
       }}>
-      <ContextLink href='#header' text='Top' />
+      <ContextLink href='#header' text='Home' />
       <ContextLink href='#projects' text='Projects' />
       <ContextLink href='#interests' text='Interests' />
-      <ContextLink href='#achievements' text='Achievements' />
+      {/* <ContextLink href='#achievements' text='Achievements' /> */}
     </div>
   );
 };

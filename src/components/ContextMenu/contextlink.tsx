@@ -29,9 +29,10 @@ const ContextLink = ({ href, text }: ContextLinkProps) => {
           textAlign: 'center',
           cursor: 'pointer',
           fontWeight: 'bold',
-          backgroundColor: '#ded',
+          backgroundColor: '#fff',
           padding: '10px',
           borderRadius: '5px',
+          boxShadow: '0 0 15px 1px rgba(0, 0, 0, 0.5)',
         }}>
         {text}
       </div>
