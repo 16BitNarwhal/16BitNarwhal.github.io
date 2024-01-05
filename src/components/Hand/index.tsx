@@ -147,7 +147,6 @@ const HandsContainer = () => {
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
-  const splatterWaitTime = useRef(0);
   const lastFrameTime = useRef(0);
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
@@ -191,7 +190,6 @@ const HandsContainer = () => {
       createSplatter({ x, y });
       prevCursorPosition.current = { x, y };
       lastSplatterTime.current = Date.now();
-      splatterWaitTime.current = Math.random() * 1000 + 500;
     }
 
     prevCursorPosition.current = { x, y };
