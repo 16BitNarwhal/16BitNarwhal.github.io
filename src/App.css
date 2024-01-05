@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   background-color: rgba(220, 220, 220, 0.2);
+  display: relative;
 }
 
 .App-header {

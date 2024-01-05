@@ -7,10 +7,12 @@ import Achievements from './pages/Achievements';
 
 import HandsContainer from './components/Hand';
 import ContextMenu from './components/ContextMenu';
+import HowToHand from './components/HowToHand';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
   const [isGesture, setIsGesture] = useState(false);
+  const [isHowToHand, setIsHowToHand] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -44,8 +46,10 @@ const App = () => {
   useEffect(() => {
     const stylesheet = document.styleSheets[0];
     console.log(isGesture);
-    if (isGesture) stylesheet.insertRule('* { cursor: none !important; }');
-    else {
+    if (isGesture) {
+      stylesheet.insertRule('* { cursor: none !important; }');
+      setIsHowToHand(true);
+    } else {
       let ruleIndex = -1;
       for (let i = 0; i < stylesheet.cssRules.length; i++) {
         if (
@@ -95,6 +99,11 @@ const App = () => {
           {/* <Achievements /> */}
         </div>
         {isGesture ? <HandsContainer /> : <></>}
+        {isHowToHand ? (
+          <HowToHand close={() => setIsHowToHand(false)} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
