@@ -1,6 +1,7 @@
 interface Project {
   title: string;
   image: string;
+  year: string;
   imageGallery?: string[];
   description: string;
   url?: string;

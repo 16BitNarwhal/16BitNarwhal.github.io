@@ -21,6 +21,7 @@ const Projects = () => {
           project={{
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
+            year: '2021',
             description: 'A project',
             url: 'https://www.google.com',
             github: 'https://www.github.com',
@@ -32,6 +33,7 @@ const Projects = () => {
           project={{
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
+            year: '2021',
             description: 'A project',
             url: 'https://www.google.com',
             github: 'https://www.github.com',
@@ -43,6 +45,7 @@ const Projects = () => {
           project={{
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
+            year: '2021',
             description: 'A project',
             url: 'https://www.google.com',
             github: 'https://www.github.com',
@@ -54,6 +57,7 @@ const Projects = () => {
           project={{
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
+            year: '2021',
             description: 'A project',
             url: 'https://www.google.com',
             github: 'https://www.github.com',
@@ -65,6 +69,7 @@ const Projects = () => {
           project={{
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
+            year: '2021',
             description: 'A project',
             url: 'https://www.google.com',
             github: 'https://www.github.com',

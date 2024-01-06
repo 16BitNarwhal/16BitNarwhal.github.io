@@ -42,9 +42,30 @@ const ProjectCard = ({ project }: { project: Project }) => {
             objectFit: 'cover',
           }}
         />
-        <h3 style={{ textAlign: 'center', margin: '10px 0', color: '#333' }}>
-          {project.title}
-        </h3>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 10px',
+            margin: '-10px 0',
+          }}>
+          <h3
+            style={{
+              textAlign: 'center',
+              color: '#333',
+            }}>
+            {project.title}
+          </h3>
+          <p
+            style={{
+              textAlign: 'center',
+              color: '#666',
+            }}>
+            {project.year}
+          </p>
+        </div>
       </div>
       {isDetailsOpen && (
         <ProjectDetails project={project} onClose={handleDetailsClose} />
