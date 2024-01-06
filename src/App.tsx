@@ -45,52 +45,42 @@ const App = () => {
 
   useEffect(() => {
     const stylesheet = document.styleSheets[0];
-    console.log(isGesture);
     if (isGesture) {
       stylesheet.insertRule('* { cursor: none !important; }');
       setIsHowToHand(true);
-    } else {
-      let ruleIndex = -1;
-      for (let i = 0; i < stylesheet.cssRules.length; i++) {
-        if (
-          stylesheet.cssRules[i].cssText.startsWith(
-            '* { cursor: none !important; }'
-          )
-        ) {
-          ruleIndex = i;
-          break;
-        }
-      }
-      if (ruleIndex !== -1) stylesheet.deleteRule(ruleIndex);
     }
   }, [isGesture]);
 
   return (
     <div id='paint-on'>
       <div className='App' onContextMenu={handleContextMenu}>
-        <button
-          onClick={() => setIsGesture(!isGesture)}
-          style={{
-            position: 'fixed',
-            top: '50%',
-            right: 0,
-            transform: 'translateY(-50%)',
-            width: '100px',
-            height: '100px',
-            borderRadius: '50% 0 0 50%',
-            backgroundColor: 'rgba(255, 255, 100, 0.5)',
-            boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
-            color: '#000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            cursor: 'pointer',
-            border: 'none',
-            zIndex: 100,
-          }}>
-          <b>Click me!</b>
-        </button>
+        {!isGesture ? (
+          <button
+            onClick={() => setIsGesture(true)}
+            style={{
+              position: 'fixed',
+              top: '50%',
+              right: 0,
+              transform: 'translateY(-50%)',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50% 0 0 50%',
+              backgroundColor: 'rgba(255, 255, 100, 0.5)',
+              boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
+              color: '#000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: 'none',
+              zIndex: 100,
+            }}>
+            <b>Click me!</b>
+          </button>
+        ) : (
+          <></>
+        )}
         <Header />
         <ContextMenu />
         <div className='App-body'>
@@ -98,7 +88,7 @@ const App = () => {
           <Interests />
           {/* <Achievements /> */}
         </div>
-        {isGesture ? <HandsContainer /> : <></>}
+        <HandsContainer />
         {isHowToHand ? (
           <HowToHand close={() => setIsHowToHand(false)} />
         ) : (

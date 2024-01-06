@@ -20,12 +20,13 @@ const HandsContainer = () => {
   const lastVideoTimeRef = useRef(-1);
 
   const inputVideoRef = useRef<HTMLVideoElement | null>(null);
+  const started = useRef(false);
 
   // webcam control
   useEffect(() => {
-    if (!inputVideoReady) {
-      return;
-    }
+    if (!inputVideoReady) return;
+    if (started.current) return;
+    started.current = true;
     if (inputVideoRef.current) {
       const initGesture = async () => {
         const vision = await FilesetResolver.forVisionTasks(
@@ -151,37 +152,45 @@ const HandsContainer = () => {
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
     let y = 0;
-    if (!results.landmarks) return;
-    if (!results.landmarks[0]) return;
-    const landmarks = results.landmarks[0];
-    if (!landmarks) return;
-    indices.forEach((i) => {
-      x += landmarks[i].x;
-      y += landmarks[i].y;
-    });
+    console.log(usingMouse.current);
+    if (usingMouse.current) {
+      x = prevMousePosition.current.x;
+      y = prevMousePosition.current.y;
+    } else {
+      if (!results.landmarks) return;
+      if (!results.landmarks[0]) return;
+      const landmarks = results.landmarks[0];
+      if (!landmarks) return;
+      indices.forEach((i) => {
+        x += landmarks[i].x;
+        y += landmarks[i].y;
+      });
 
-    x /= indices.length;
-    y /= indices.length;
+      x /= indices.length;
+      y /= indices.length;
 
-    let scrollSpeed = 0;
-    if (y < 0.15) {
-      scrollSpeed = (0.15 - y) / 0.15;
-      scrollSpeed = scrollSpeed * 30 + 5;
-      scrollSpeed *= -1;
-    } else if (y > 0.75) {
-      scrollSpeed = (y - 0.75) / 0.25;
-      scrollSpeed = scrollSpeed * 30 + 5;
+      let scrollSpeed = 0;
+      if (y < 0.15) {
+        scrollSpeed = (0.15 - y) / 0.15;
+        scrollSpeed = scrollSpeed * 30 + 5;
+        scrollSpeed *= -1;
+      } else if (y > 0.75) {
+        scrollSpeed = (y - 0.75) / 0.25;
+        scrollSpeed = scrollSpeed * 30 + 5;
+      }
+
+      x = x * (window.innerWidth + 200) - 100;
+      y = y * (window.innerHeight + 400) - 200;
+      x = window.innerWidth - x;
+
+      x = Math.max(0, Math.min(window.innerWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight, y));
+
+      if (scrollSpeed !== 0) {
+        window.scrollBy(0, scrollSpeed);
+      }
+      setCursorPosition({ x, y });
     }
-
-    x = x * (window.innerWidth + 200) - 100;
-    y = y * (window.innerHeight + 400) - 200;
-    x = window.innerWidth - x;
-
-    x = Math.max(0, Math.min(window.innerWidth, x));
-    y = Math.max(0, Math.min(window.innerHeight, y));
-    console.log(x, y);
-
-    setCursorPosition({ x, y });
 
     const cursorSpeed =
       Math.sqrt(
@@ -197,10 +206,6 @@ const HandsContainer = () => {
     }
 
     prevCursorPosition.current = { x, y };
-
-    if (scrollSpeed !== 0) {
-      window.scrollBy(0, scrollSpeed);
-    }
 
     const element: Element | null = document.elementFromPoint(x, y);
     if (lastElementHovered.current !== element) {
@@ -272,7 +277,6 @@ const HandsContainer = () => {
     element.dispatchEvent(clickEvent);
     if (element.tagName === 'A') {
       const href = element.getAttribute('href');
-      console.log(href);
       if (href) {
         window.open(href, '_blank')?.focus();
       }
@@ -283,23 +287,32 @@ const HandsContainer = () => {
     }, 100);
   };
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'q') {
-        simulateClick(cursorPosition, Click.left);
-      }
-    },
-    [cursorPosition]
-  );
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
-
+  const usingMouse = useRef(true);
+  const prevMousePosition = useRef({ x: 0, y: 0 });
+  const prevMouseTime = useRef(0);
+  const stopMouseInterval = useRef<NodeJS.Timeout | null>(null);
+  // mouse control
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
+      const mouseSpeed =
+        Math.sqrt(
+          Math.pow(e.clientX - prevMousePosition.current.x, 2) +
+            Math.pow(e.clientY - prevMousePosition.current.y, 2)
+        ) /
+        (Date.now() - prevMouseTime.current);
+      if (mouseSpeed > 0.1) {
+        usingMouse.current = true;
+        setCursorPosition({ x: e.clientX - 25, y: e.clientY - 25 });
+        if (stopMouseInterval.current) clearInterval(stopMouseInterval.current);
+        stopMouseInterval.current = setTimeout(() => {
+          usingMouse.current = false;
+        }, 500);
+      } else {
+        usingMouse.current = false;
+      }
+      prevMousePosition.current = { x: e.clientX, y: e.clientY };
+      prevMouseTime.current = Date.now();
     };
     window.addEventListener('mousemove', handleMouseMove);
 
