@@ -173,9 +173,13 @@ const HandsContainer = () => {
       scrollSpeed = scrollSpeed * 30 + 5;
     }
 
-    x *= window.innerWidth;
-    y *= window.innerHeight;
+    x = x * (window.innerWidth + 200) - 100;
+    y = y * (window.innerHeight + 400) - 200;
     x = window.innerWidth - x;
+
+    x = Math.max(0, Math.min(window.innerWidth, x));
+    y = Math.max(0, Math.min(window.innerHeight, y));
+    console.log(x, y);
 
     setCursorPosition({ x, y });
 
