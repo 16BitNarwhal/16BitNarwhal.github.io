@@ -107,28 +107,62 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
             {project.description}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setIsVisible(false);
-            setTimeout(() => {
-              onClose();
-            }, 200);
-          }}
+        <div
           style={{
             position: 'absolute',
-            top: '20px',
-            right: '20px',
-            borderRadius: '50%',
-            boxShadow: '0 0 25px 5px rgba(0, 0, 0, 0.25)',
-            border: 'none',
-            color: '#000',
-            width: '80px',
-            height: '80px',
-            fontSize: '30px',
-            fontWeight: 'bold',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            gap: '20px',
           }}>
-          X
-        </button>
+          {project.url ? (
+            <a
+              href={project.url}
+              target='_blank'
+              rel='noreferrer'
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '20px',
+              }}>
+              <img src='/play.png' alt='demo' height='50px' />
+            </a>
+          ) : (
+            <> </>
+          )}
+          {project.github ? (
+            <a
+              href={project.github}
+              target='_blank'
+              rel='noreferrer'
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '20px',
+              }}>
+              <img src='/github.png' alt='github' height='50px' />
+            </a>
+          ) : (
+            <> </>
+          )}
+          <button
+            onClick={() => {
+              setIsVisible(false);
+              setTimeout(() => {
+                onClose();
+              }, 200);
+            }}
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              padding: '20px',
+            }}>
+            <img src='/close.png' alt='close' height='50px' />
+          </button>
+        </div>
       </div>
     </>
   );

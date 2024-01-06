@@ -223,7 +223,6 @@ const HandsContainer = () => {
           }
           parent = parent.parentElement;
         }
-        console.log(element);
         setIsHoveringClickable(isClickable);
         lastElementHovered.current = element;
       }
@@ -267,6 +266,13 @@ const HandsContainer = () => {
     );
     if (!element) return;
     element.dispatchEvent(clickEvent);
+    if (element.tagName === 'A') {
+      const href = element.getAttribute('href');
+      console.log(href);
+      if (href) {
+        window.open(href, '_blank')?.focus();
+      }
+    }
     element.className += ' click';
     setTimeout(() => {
       element.className = element.className.replace(' click', '');

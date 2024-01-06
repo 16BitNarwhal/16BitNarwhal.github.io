@@ -3,8 +3,8 @@ interface Project {
   image: string;
   imageGallery?: string[];
   description: string;
-  url: string;
-  github: string;
+  url?: string;
+  github?: string;
   techStack: string[];
   alignment: 'left' | 'right';
 }
