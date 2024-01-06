@@ -168,8 +168,8 @@ const HandsContainer = () => {
       scrollSpeed = (0.15 - y) / 0.15;
       scrollSpeed = scrollSpeed * 30 + 5;
       scrollSpeed *= -1;
-    } else if (y > 0.8) {
-      scrollSpeed = (y - 0.8) / 0.2;
+    } else if (y > 0.75) {
+      scrollSpeed = (y - 0.75) / 0.25;
       scrollSpeed = scrollSpeed * 30 + 5;
     }
 

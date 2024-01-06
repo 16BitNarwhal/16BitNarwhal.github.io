@@ -121,7 +121,6 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
           {project.url ? (
             <a
               href={project.url}
-              target='_blank'
               rel='noreferrer'
               style={{
                 backgroundColor: 'transparent',
@@ -136,7 +135,6 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
           {project.github ? (
             <a
               href={project.github}
-              target='_blank'
               rel='noreferrer'
               style={{
                 backgroundColor: 'transparent',
