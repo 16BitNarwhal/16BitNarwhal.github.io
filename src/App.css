@@ -6,7 +6,7 @@
 
 .App-header {
   background-color: rgba(220, 220, 220, 0.5);
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,10 +14,10 @@
   font-size: calc(10px + 2vmin);
   color: #353535;
   box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
-.App-body {
-  padding: 50px 0;
+.main {
   display: flex;
   flex-direction: column;
   align-items: center;

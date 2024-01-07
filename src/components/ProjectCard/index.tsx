@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import ProjectDetails from './projectdetails';
-import Project from './projectinterface';
+import { Link } from 'react-router-dom';
+
+type Project = {
+  title: string;
+  year: string;
+  image: string;
+  alignment: 'left' | 'right';
+};
 
 const ProjectCard = ({ project }: { project: Project }) => {
-  const [isDetailsOpen, setDetailsOpen] = useState(false);
-
-  const handleCardClick = () => {
-    setDetailsOpen(true);
-  };
-
-  const handleDetailsClose = () => {
-    setDetailsOpen(false);
-  };
-
   return (
     <>
-      <div
+      <Link
+        to={`/projects/${project.title.replaceAll(' ', '').toLowerCase()}`}
         className='project-card clickable'
         style={{
           border: '2px solid #ddd',
@@ -29,8 +26,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
           alignSelf: project.alignment == 'left' ? 'flex-start' : 'flex-end',
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           boxShadow: '0 0 10px 1px rgba(0, 0, 0, 0.3)',
-        }}
-        onClick={handleCardClick}>
+          textDecoration: 'none',
+        }}>
         <img
           src={project.image}
           alt={project.title}
@@ -66,10 +63,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
             {project.year}
           </p>
         </div>
-      </div>
-      {isDetailsOpen && (
-        <ProjectDetails project={project} onClose={handleDetailsClose} />
-      )}
+      </Link>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Project from './projectinterface';
+import Project from '../../pages/Projects/projectinterface';
 
 interface ProjectDetailsProps {
   project: Project;
@@ -21,7 +21,7 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
 
   return (
     <>
-      <div
+      {/* <div
         className={`project-details`}
         style={{
           position: 'fixed',
@@ -161,7 +161,7 @@ const ProjectDetails = ({ project, onClose }: ProjectDetailsProps) => {
             <img src='/close.png' alt='close' height='50px' />
           </button>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

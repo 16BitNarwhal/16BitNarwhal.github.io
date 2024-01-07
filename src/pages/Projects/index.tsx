@@ -1,11 +1,11 @@
 import React from 'react';
-import ProjectCard from '../../components/Project';
+import ProjectCard from '../../components/ProjectCard';
 
 const Projects = () => {
   return (
     <div id='projects'>
       <h1 id='header'>Projects</h1>
-      {/* fill out sample ProjectCards */}
+      {/* TODO: fill out sample ProjectCards */}
       <div
         className='projects-container'
         style={{
@@ -22,10 +22,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            description: 'A project',
-            url: 'https://www.google.com',
-            github: 'https://www.github.com',
-            techStack: ['React', 'TypeScript', 'Node.js'],
             alignment: 'right',
           }}
         />
@@ -34,10 +30,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            description: 'A project',
-            url: 'https://www.google.com',
-            github: 'https://www.github.com',
-            techStack: ['React', 'TypeScript', 'Node.js'],
             alignment: 'left',
           }}
         />
@@ -46,10 +38,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            description: 'A project',
-            url: 'https://www.google.com',
-            github: 'https://www.github.com',
-            techStack: ['React', 'TypeScript', 'Node.js'],
             alignment: 'right',
           }}
         />
@@ -58,10 +46,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            description: 'A project',
-            url: 'https://www.google.com',
-            github: 'https://www.github.com',
-            techStack: ['React', 'TypeScript', 'Node.js'],
             alignment: 'left',
           }}
         />
@@ -70,10 +54,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            description: 'A project',
-            url: 'https://www.google.com',
-            github: 'https://www.github.com',
-            techStack: ['React', 'TypeScript', 'Node.js'],
             alignment: 'right',
           }}
         />

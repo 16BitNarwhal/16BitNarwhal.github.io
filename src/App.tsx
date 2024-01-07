@@ -4,10 +4,12 @@ import './App.css';
 import Projects from './pages/Projects';
 import Interests from './pages/Interests';
 import Achievements from './pages/Achievements';
+import ProjectRouter from './pages/Projects/ProjectRouter';
 
 import HandsContainer from './components/Hand';
 import ContextMenu from './components/ContextMenu';
 import HowToHand from './components/HowToHand';
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
@@ -52,50 +54,50 @@ const App = () => {
   }, [isGesture]);
 
   return (
-    <div id='paint-on'>
-      <div className='App' onContextMenu={handleContextMenu}>
-        {!isGesture ? (
-          <button
-            onClick={() => setIsGesture(true)}
-            style={{
-              position: 'fixed',
-              top: '50%',
-              right: 0,
-              transform: 'translateY(-50%)',
-              width: '100px',
-              height: '100px',
-              borderRadius: '50% 0 0 50%',
-              backgroundColor: 'rgba(255, 255, 100, 0.5)',
-              boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
-              color: '#000',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: 'none',
-              zIndex: 100,
-            }}>
-            <b>Click me!</b>
-          </button>
-        ) : (
-          <></>
-        )}
-        <Header />
-        <ContextMenu />
-        <div className='App-body'>
-          <Projects />
-          <Interests />
-          {/* <Achievements /> */}
+    <BrowserRouter>
+      <div id='paint-on'>
+        <div className='App' onContextMenu={handleContextMenu}>
+          {!isGesture ? (
+            <button
+              onClick={() => setIsGesture(true)}
+              style={{
+                position: 'fixed',
+                top: '50%',
+                right: 0,
+                transform: 'translateY(-50%)',
+                width: '100px',
+                height: '100px',
+                borderRadius: '50% 0 0 50%',
+                backgroundColor: 'rgba(255, 255, 100, 0.5)',
+                boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
+                color: '#000',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: 'none',
+                zIndex: 100,
+              }}>
+              <b>Click me!</b>
+            </button>
+          ) : (
+            <></>
+          )}
+          <ContextMenu />
+          <Routes>
+            <Route path='/' element={<Main />} />
+            <Route path='/projects/:id' element={<ProjectRouter />} />
+          </Routes>
+          <HandsContainer />
+          {isHowToHand ? (
+            <HowToHand close={() => setIsHowToHand(false)} />
+          ) : (
+            <></>
+          )}
         </div>
-        <HandsContainer />
-        {isHowToHand ? (
-          <HowToHand close={() => setIsHowToHand(false)} />
-        ) : (
-          <></>
-        )}
       </div>
-    </div>
+    </BrowserRouter>
   );
 };
 
@@ -108,6 +110,16 @@ const Header = () => {
     </div>
   );
 };
-// };
+
+const Main = () => {
+  return (
+    <div className='main'>
+      <Header />
+      <Projects />
+      <Interests />
+      {/* <Achievements /> */}
+    </div>
+  );
+};
 
 export default App;
