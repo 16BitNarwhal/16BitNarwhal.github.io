@@ -1,6 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
+import Error from './Error';
+
 import ScoreSwipe from './Details/ScoreSwipe';
 
 const Project = () => {
@@ -10,7 +12,7 @@ const Project = () => {
     case 'scoreswipe':
       return <ScoreSwipe />;
     default:
-      return <div>404: Project Not Found!</div>;
+      return <Error />;
   }
 };
 

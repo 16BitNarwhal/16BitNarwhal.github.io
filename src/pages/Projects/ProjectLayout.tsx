@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProjectInterface from './projectinterface';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,10 @@ interface ProjectLayoutProps {
 }
 
 const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div id='layout'>
       <div id='layout-header'>
