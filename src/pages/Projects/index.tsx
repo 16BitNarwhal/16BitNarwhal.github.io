@@ -19,10 +19,9 @@ const Projects = () => {
         }}>
         <ProjectCard
           project={{
-            title: 'Project 1',
+            title: 'Score Swipe',
             image: 'https://picsum.photos/200/300',
-            year: '2021',
-            alignment: 'right',
+            year: '2023',
           }}
         />
         <ProjectCard
@@ -30,7 +29,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            alignment: 'left',
           }}
         />
         <ProjectCard
@@ -38,7 +36,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            alignment: 'right',
           }}
         />
         <ProjectCard
@@ -46,7 +43,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            alignment: 'left',
           }}
         />
         <ProjectCard
@@ -54,7 +50,6 @@ const Projects = () => {
             title: 'Project 1',
             image: 'https://picsum.photos/200/300',
             year: '2021',
-            alignment: 'right',
           }}
         />
       </div>

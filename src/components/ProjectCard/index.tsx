@@ -5,7 +5,6 @@ type Project = {
   title: string;
   year: string;
   image: string;
-  alignment: 'left' | 'right';
 };
 
 const ProjectCard = ({ project }: { project: Project }) => {
@@ -23,7 +22,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
           transition: 'transform 0.2s',
           overflow: 'hidden',
           width: '300px',
-          alignSelf: project.alignment == 'left' ? 'flex-start' : 'flex-end',
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
           boxShadow: '0 0 10px 1px rgba(0, 0, 0, 0.3)',
           textDecoration: 'none',
