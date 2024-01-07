@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ProjectInterface from './projectinterface';
 import { Link } from 'react-router-dom';
+import './style.css';
 
 interface ProjectLayoutProps {
   children: React.ReactNode;
@@ -13,82 +14,99 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
   }, []);
 
   return (
-    <div id='layout'>
-      <div id='layout-header'>
-        <h1>{project.title}</h1>
-        <p>{project.year}</p>
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            gap: '20px',
-          }}>
-          {project.url ? (
-            <a
-              href={project.url}
-              rel='noreferrer'
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                padding: '20px',
-              }}>
-              <img src='/play.png' alt='demo' height='50px' />
-            </a>
-          ) : (
-            <> </>
-          )}
-          {project.github ? (
-            <a
-              href={project.github}
-              rel='noreferrer'
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                padding: '20px',
-              }}>
-              <img src='/github.png' alt='github' height='50px' />
-            </a>
-          ) : (
-            <> </>
-          )}
-          <Link
-            to='/'
+    <div
+      className='layout'
+      style={{
+        height: '100%',
+        backgroundColor: 'rgba(220, 220, 220, 0.5)',
+      }}>
+      <div className='project'>
+        <div className='layout-header'>
+          <span
             style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              padding: '20px',
+              color: '#333',
+              fontSize: '2rem',
+              fontWeight: 'bold',
             }}>
-            <img src='/close.png' alt='close' height='50px' />
-          </Link>
-        </div>
-        <div
-          style={{
-            marginTop: '-20px',
-            marginBottom: '20px',
-            display: 'flex',
-            justifyContent: 'center',
-          }}>
-          {project.techStack.map((tech, index) => (
-            <p
-              key={index}
+            {project.title}
+          </span>
+          <br />
+          <span
+            style={{
+              color: '#333',
+            }}>
+            {project.year}
+          </span>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              gap: '20px',
+              marginBottom: '20px',
+            }}>
+            {project.url ? (
+              <a
+                href={project.url}
+                rel='noreferrer'
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  padding: '20px',
+                }}>
+                <img src='/play.png' alt='demo' height='50px' />
+              </a>
+            ) : (
+              <> </>
+            )}
+            {project.github ? (
+              <a
+                href={project.github}
+                rel='noreferrer'
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  padding: '20px',
+                }}>
+                <img src='/github.png' alt='github' height='50px' />
+              </a>
+            ) : (
+              <> </>
+            )}
+            <Link
+              to='/'
               style={{
-                backgroundColor: '#333',
-                color: '#fff',
-                padding: '5px',
-                borderRadius: '5px',
-                margin: '0 5px',
+                backgroundColor: 'transparent',
+                border: 'none',
+                padding: '20px',
               }}>
-              {tech}
-            </p>
-          ))}
+              <img src='/close.png' alt='close' height='50px' />
+            </Link>
+          </div>
+          <div
+            style={{
+              marginTop: '-20px',
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+            {project.techStack.map((tech, index) => (
+              <p
+                key={index}
+                style={{
+                  backgroundColor: '#333',
+                  color: '#fff',
+                  padding: '5px',
+                  borderRadius: '5px',
+                  margin: '0 5px',
+                }}>
+                {tech}
+              </p>
+            ))}
+          </div>
         </div>
+        <div className='layout-content'>{children}</div>
       </div>
-      <div id='layout-content'>{children}</div>
     </div>
   );
 };

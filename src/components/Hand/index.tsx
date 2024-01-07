@@ -152,7 +152,7 @@ const HandsContainer = () => {
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
     let y = 0;
-    console.log(usingMouse.current);
+    // console.log(usingMouse.current);
     if (usingMouse.current) {
       x = prevMousePosition.current.x;
       y = prevMousePosition.current.y;
