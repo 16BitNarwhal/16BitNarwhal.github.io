@@ -98,7 +98,7 @@ const HandsContainer = () => {
     splatter.classList.add('splatter');
 
     const randomRotation = Math.floor(Math.random() * 360);
-    const randomOpacity = Math.random() * 0.5 + 0.5;
+    const randomOpacity = Math.random() * 0.5 + 0.1;
     const randomColor =
       splatterColors[Math.floor(Math.random() * splatterColors.length)];
 
@@ -120,11 +120,11 @@ const HandsContainer = () => {
 
     setTimeout(() => {
       splatter.remove();
-    }, Math.random() * 5000 + 5000);
+    }, Math.random() * 10000 + 1000);
   };
 
   const createSplatter = ({ x, y }: { x: number; y: number }) => {
-    let splatterCount = Math.floor(Math.random() * 10) + 5;
+    let splatterCount = Math.floor(Math.random() * 5) + 5;
     let bigSplatterCount = Math.floor(Math.random() * 2) + 1;
 
     while (splatterCount > 0) {
