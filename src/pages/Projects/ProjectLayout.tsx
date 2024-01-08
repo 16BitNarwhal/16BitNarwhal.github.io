@@ -17,8 +17,9 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
     <div
       className='layout'
       style={{
-        height: '100%',
+        minHeight: '100%',
         backgroundColor: 'rgba(220, 220, 220, 0.5)',
+        fontSize: '1.25rem',
       }}>
       <div className='project'>
         <div className='layout-header'>
