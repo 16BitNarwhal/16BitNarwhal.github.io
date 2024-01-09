@@ -311,7 +311,7 @@ const HandsContainer = () => {
         (Date.now() - prevMouseTime.current);
       if (mouseSpeed > 0.1) {
         usingMouse.current = true;
-        setCursorPosition({ x: e.clientX - 25, y: e.clientY - 25 });
+        setCursorPosition({ x: e.clientX - 15, y: e.clientY - 15 });
         if (stopMouseInterval.current) clearInterval(stopMouseInterval.current);
         stopMouseInterval.current = setTimeout(() => {
           usingMouse.current = false;
