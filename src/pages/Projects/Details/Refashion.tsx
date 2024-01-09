@@ -15,6 +15,8 @@ const Refashion = () => {
           'Flutter (Dart)',
           'OpenAI',
           'AWS',
+          'Weather API',
+          'Google Calendar API',
         ],
         github: 'https://git.uwaterloo.ca/e256zhan/refashion/-/tree/main',
       }}>
