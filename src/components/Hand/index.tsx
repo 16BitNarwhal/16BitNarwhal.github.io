@@ -220,7 +220,7 @@ const HandsContainer = () => {
       if (prev) {
         let parent: Element | null = prev;
         while (parent) {
-          parent.className = parent.className.replace(' hover', '');
+          parent.className = parent.className.replace(' mouse_hovering', '');
           parent = parent.parentElement;
         }
       }
@@ -234,7 +234,7 @@ const HandsContainer = () => {
             parent.tagName === 'BUTTON' ||
             parent.tagName === 'A'
           ) {
-            parent.className += ' hover';
+            parent.className += ' mouse_hovering';
             isClickable = true;
           }
           parent = parent.parentElement;
@@ -288,9 +288,10 @@ const HandsContainer = () => {
         window.open(href, '_blank')?.focus();
       }
     }
-    element.className += ' click';
+    console.log(element);
+    element.className += ' mouse_clicked';
     setTimeout(() => {
-      element.className = element.className.replace(' click', '');
+      element.className = element.className.replace(' mouse_clicked', '');
     }, 100);
   };
 

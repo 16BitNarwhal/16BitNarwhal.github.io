@@ -50,10 +50,21 @@ html {
   pointer-events: none;
 }
 
-.clickable.hover,
-.clickable:hover,
+.clickable,
+button {
+  cursor: pointer;
+  scale: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.clickable.mouse_hovering,
+.clickable:hover {
+  transform: scale(1.2);
+}
+
+button.mouse_hovering,
 button:hover {
-  animation: hoverAnimation 0.7s infinite alternate linear;
+  scale: 1.2;
 }
 
 @keyframes hoverAnimation {
@@ -61,11 +72,11 @@ button:hover {
     scale: 1;
   }
   100% {
-    scale: 1.1;
+    scale: 1.3;
   }
 }
 
-.clickable.click,
+.clickable.mouse_click,
 .clickable:active,
 button:active {
   animation: clickAnimation 0.15s;

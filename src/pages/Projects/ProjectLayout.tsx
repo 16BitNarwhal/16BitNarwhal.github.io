@@ -55,7 +55,12 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                   border: 'none',
                   padding: '20px',
                 }}>
-                <img src='/play.png' alt='demo' height='50px' />
+                <img
+                  className='clickable'
+                  src='/play.png'
+                  alt='demo'
+                  height='50px'
+                />
               </a>
             ) : (
               <> </>
@@ -69,7 +74,12 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                   border: 'none',
                   padding: '20px',
                 }}>
-                <img src='/github.png' alt='github' height='50px' />
+                <img
+                  className='clickable'
+                  src='/github.png'
+                  alt='github'
+                  height='50px'
+                />
               </a>
             ) : (
               <> </>
@@ -81,7 +91,12 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                 border: 'none',
                 padding: '20px',
               }}>
-              <img src='/close.png' alt='close' height='50px' />
+              <img
+                className='clickable'
+                src='/close.png'
+                alt='close'
+                height='50px'
+              />
             </Link>
           </div>
           <div

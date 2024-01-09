@@ -16,7 +16,7 @@
   align-items: center;
 }
 
-.interest-hover.hover,
+.interest-hover.mouse_hovering,
 .interest-hover:hover {
   cursor: pointer;
   transform: none;
