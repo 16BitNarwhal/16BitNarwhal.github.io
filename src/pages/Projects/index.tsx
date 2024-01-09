@@ -20,14 +20,14 @@ const Projects = () => {
         <ProjectCard
           project={{
             title: 'Score Swipe',
-            image: 'https://picsum.photos/200/300',
+            image: 'project/scoreswipe/thumbnail.png',
             year: '2023',
           }}
         />
         <ProjectCard
           project={{
-            title: 'Project 1',
-            image: 'https://picsum.photos/200/300',
+            title: 'VOffice',
+            image: 'project/voffice/thumbnail.png',
             year: '2021',
           }}
         />

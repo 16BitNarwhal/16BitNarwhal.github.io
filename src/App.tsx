@@ -17,7 +17,7 @@ const App = () => {
   const [isHowToHand, setIsHowToHand] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     const contextMenu = document.getElementById('context-menu');
     if (contextMenu) {

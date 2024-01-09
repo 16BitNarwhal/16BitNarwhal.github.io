@@ -6,7 +6,7 @@ const ScoreSwipe = () => {
     <ProjectLayout
       project={{
         title: 'ScoreSwipe',
-        year: '2021',
+        year: '2023',
         techStack: ['Flutter (Dart)', 'Android', 'Computer Vision', 'SQLite'],
         github: 'https://www.github.com/16bitnarwhal/scoreswipe',
       }}>
@@ -37,7 +37,7 @@ const ScoreSwipe = () => {
       <h2>Development</h2>
       <div>
         <img
-          src='/project/mlkit landmarks.png'
+          src='/project/scoreswipe/mlkit landmarks.png'
           height='150px'
           alt='ML Kit facial landmarks'
           style={{ float: 'left', margin: '0 0 1rem 1rem' }}
@@ -59,7 +59,27 @@ const ScoreSwipe = () => {
         switched to using SQLite for both the metadata and the pdf data storage.
         However, for large files, SQLite
       </p>
-      {/* some screenshots, video */}
+      <h2>In Action</h2>
+      <div
+        style={{
+          margin: '1rem 0',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1rem',
+        }}>
+        <img
+          width='320px'
+          src='/project/scoreswipe/demo_create.gif'
+          alt='ScoreSwipe demo'
+        />
+        <img
+          width='320px'
+          src='/project/scoreswipe/demo_edit.gif'
+          alt='ScoreSwipe demo'
+        />
+      </div>
     </ProjectLayout>
   );
 };
