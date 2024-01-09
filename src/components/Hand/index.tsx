@@ -93,7 +93,14 @@ const HandsContainer = () => {
   ];
   const splatterRange = 100;
 
+  const splatterContainer = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    splatterContainer.current = document.querySelector('#paint-on');
+  }, []);
+
   const createSplatterElement = (x: number, y: number, size: number) => {
+    if (!splatterContainer.current) return;
+
     const splatter = document.createElement('div');
     splatter.classList.add('splatter');
 
@@ -116,7 +123,7 @@ const HandsContainer = () => {
     splatter.style.opacity = `${randomOpacity}`;
     splatter.style.color = randomColor;
 
-    body.appendChild(splatter);
+    splatterContainer.current.appendChild(splatter);
 
     setTimeout(() => {
       splatter.remove();

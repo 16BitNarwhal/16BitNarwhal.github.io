@@ -1,5 +1,5 @@
 .splatter {
-  overflow: hidden;
+  /* overflow: hidden; */
   position: absolute;
   border-radius: 50%;
   pointer-events: none;

@@ -55,47 +55,46 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <div id='paint-on'>
-        <div className='App' onContextMenu={handleContextMenu}>
-          {!isGesture ? (
-            <button
-              onClick={() => setIsGesture(true)}
-              style={{
-                position: 'fixed',
-                top: '50%',
-                right: 0,
-                transform: 'translateY(-50%)',
-                width: '100px',
-                height: '100px',
-                borderRadius: '50% 0 0 50%',
-                backgroundColor: 'rgba(255, 255, 100, 0.5)',
-                boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
-                color: '#000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                cursor: 'pointer',
-                border: 'none',
-                zIndex: 100,
-              }}>
-              <b>Click me!</b>
-            </button>
-          ) : (
-            <></>
-          )}
-          <ContextMenu />
-          <Routes>
-            <Route path='/' element={<Main />} />
-            <Route path='/projects/:id' element={<ProjectRouter />} />
-          </Routes>
-          <HandsContainer />
-          {isHowToHand ? (
-            <HowToHand close={() => setIsHowToHand(false)} />
-          ) : (
-            <></>
-          )}
-        </div>
+      <div id='paint-on'></div> {/* for paint effect */}
+      <div className='App' onContextMenu={handleContextMenu}>
+        {!isGesture ? (
+          <button
+            onClick={() => setIsGesture(true)}
+            style={{
+              position: 'fixed',
+              top: '50%',
+              right: 0,
+              transform: 'translateY(-50%)',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50% 0 0 50%',
+              backgroundColor: 'rgba(255, 255, 100, 0.5)',
+              boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
+              color: '#000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              cursor: 'pointer',
+              border: 'none',
+              zIndex: 100,
+            }}>
+            <b>Click me!</b>
+          </button>
+        ) : (
+          <></>
+        )}
+        <ContextMenu />
+        <Routes>
+          <Route path='/' element={<Main />} />
+          <Route path='/projects/:id' element={<ProjectRouter />} />
+        </Routes>
+        <HandsContainer />
+        {isHowToHand ? (
+          <HowToHand close={() => setIsHowToHand(false)} />
+        ) : (
+          <></>
+        )}
       </div>
     </BrowserRouter>
   );
