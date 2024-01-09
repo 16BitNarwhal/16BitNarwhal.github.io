@@ -5,7 +5,6 @@ const Projects = () => {
   return (
     <div id='projects'>
       <h1 id='header'>Projects</h1>
-      {/* TODO: fill out sample ProjectCards */}
       <div
         className='projects-container'
         style={{

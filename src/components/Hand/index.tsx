@@ -340,8 +340,8 @@ const HandsContainer = () => {
         className='cursor'
         style={{
           position: 'fixed',
-          left: cursorPosition.x,
-          top: cursorPosition.y,
+          left: cursorPosition.x - 25,
+          top: cursorPosition.y - 25,
           fontSize: '50px',
           zIndex: 999,
         }}>
