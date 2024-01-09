@@ -5,6 +5,7 @@ import Error from './Error';
 
 import ScoreSwipe from './Details/ScoreSwipe';
 import VOffice from './Details/VOffice';
+import Refashion from './Details/Refashion';
 
 const Project = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,8 @@ const Project = () => {
       return <ScoreSwipe />;
     case 'voffice':
       return <VOffice />;
+    case 'refashion':
+      return <Refashion />;
     default:
       return <Error />;
   }

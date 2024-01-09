@@ -90,6 +90,8 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
               marginBottom: '20px',
               display: 'flex',
               justifyContent: 'center',
+              flexWrap: 'wrap',
+              gap: '10px',
             }}>
             {project.techStack.map((tech, index) => (
               <p
@@ -99,7 +101,9 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                   color: '#fff',
                   padding: '5px',
                   borderRadius: '5px',
-                  margin: '0 5px',
+                  margin: '0',
+                  fontSize: '1.1rem',
+                  flex: '1 0 auto',
                 }}>
                 {tech}
               </p>

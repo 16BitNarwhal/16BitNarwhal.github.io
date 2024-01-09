@@ -26,7 +26,11 @@ const VOffice = () => {
         />
         <b>VOffice</b> is a virtual reality office environment designed for
         collaborative work and comes with AI-Powered Advisors to help you with
-        financial and other business decisions.
+        financial and other business decisions. VOffice was the first place🥇
+        prize winner at the{' '}
+        <a href='https://uwaterloo.ca/events/events/velocity-presents-innovation-challenge-imagining-future'>
+          Velocity Reimagining the Future of Finance hackathon
+        </a>
       </p>
       <h2
         style={{
@@ -35,18 +39,17 @@ const VOffice = () => {
         Inspiration
       </h2>
       <p>
-        My team and I were participating in{' '}
+        The project started when my team and I were participating in{' '}
         <a href='https://uwaterloo.ca/events/events/velocity-presents-innovation-challenge-imagining-future'>
           Velocity's Reimagining the Future of Finance hackathon
         </a>{' '}
         in September. The hackathon was sponsored by BMO, Unity, and Rogers. The
-        challenge was to assist future generations with financial literacy. Many
-        ideas led to educating finance through video games, but we wanted
-        something that could be used as a tool rather than just an educational
-        game. So, we came up with VOffice, a platform that allows you to
-        collaborate with your coworkers in real time in a VR environment, and
-        seek advice from AI-Powered Advisors. Eventually we ended up winning the
-        hackathon
+        challenge was to assist future generations with financial literacy💵.
+        Many ideas led to educating finance through video games🕹️, but we wanted
+        to build a usable tool🔧 rather than an educational game. So, we came up
+        with VOffice, a platform that allows you to collaborate with your
+        coworkers in real time in a VR environment, and seek advice from
+        AI-Powered Advisors🤖.
       </p>
       <h2>Development</h2>
       <p>

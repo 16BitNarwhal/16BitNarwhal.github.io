@@ -28,28 +28,14 @@ const Projects = () => {
           project={{
             title: 'VOffice',
             image: 'project/voffice/thumbnail.png',
-            year: '2021',
+            year: '2023',
           }}
         />
         <ProjectCard
           project={{
-            title: 'Project 1',
-            image: 'https://picsum.photos/200/300',
-            year: '2021',
-          }}
-        />
-        <ProjectCard
-          project={{
-            title: 'Project 1',
-            image: 'https://picsum.photos/200/300',
-            year: '2021',
-          }}
-        />
-        <ProjectCard
-          project={{
-            title: 'Project 1',
-            image: 'https://picsum.photos/200/300',
-            year: '2021',
+            title: 'Refashion',
+            image: 'project/refashion/thumbnail.jpg',
+            year: '2023',
           }}
         />
       </div>
