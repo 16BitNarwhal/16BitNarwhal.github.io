@@ -37,12 +37,26 @@ const Interests = () => {
           boxShadow: '0 0 15px 5px rgba(0, 0, 0, 0.3)',
         }}>
         <Interest
+          minWait={1000}
+          waitRange={0}
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/310/200',
-            'https://picsum.photos/200/400',
+            './interests/climb/climb_1.jpg',
+            './interests/climb/climb_2.jpg',
+            './interests/climb/climb_3.jpg',
+            './interests/climb/climb_4.jpg',
+            './interests/climb/climb_5.jpg',
           ]}
-          hoverText='A'
+          hoverText='Rock Climbing'
+        />
+        <Interest
+          images={[
+            './interests/taekwondo/taekwondo_1.gif',
+            './interests/taekwondo/taekwondo_2.gif',
+            './interests/taekwondo/taekwondo_3.gif',
+          ]}
+          minWait={3000}
+          waitRange={3000}
+          hoverText='Taekwondo'
         />
         <Interest
           images={[
@@ -50,7 +64,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Piano'
         />
         <Interest
           images={[
@@ -58,7 +72,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Percussion'
         />
         <Interest
           images={[
@@ -66,7 +80,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Skateboarding'
         />
         <Interest
           images={[
@@ -74,7 +88,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Reading'
         />
         <Interest
           images={[
@@ -82,7 +96,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Skipping'
         />
         <Interest
           images={[
@@ -90,7 +104,7 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Hackathons'
         />
         <Interest
           images={[
@@ -98,7 +112,15 @@ const Interests = () => {
             'https://picsum.photos/200/300',
             'https://picsum.photos/300/200',
           ]}
-          hoverText='A'
+          hoverText='Skiing'
+        />
+        <Interest
+          images={[
+            'https://picsum.photos/200/200',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/300/200',
+          ]}
+          hoverText='Making'
         />
       </div>
     </div>

@@ -5,15 +5,30 @@ interface InterestProps {
   images: string[];
   link?: string;
   hoverText: string;
+  minWait?: number;
+  waitRange?: number;
 }
 
-const Interest: React.FC<InterestProps> = ({ images, link, hoverText }) => {
+const Interest = ({
+  images,
+  link,
+  hoverText,
+  minWait,
+  waitRange,
+}: InterestProps) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const wait = Math.floor(Math.random() * 10000) + 3000;
+    if (minWait === undefined) minWait = 3000;
+    if (waitRange === undefined) waitRange = 10000;
+    const wait = Math.floor(Math.random() * waitRange!) + minWait!;
     setTimeout(() => {
       const newIndex = Math.floor(Math.random() * images.length);
+      if (newIndex === index) {
+        if (newIndex === images.length - 1) setIndex(0);
+        else setIndex(newIndex + 1);
+        return;
+      }
       const newImage = images[newIndex];
       setIndex(newIndex);
     }, wait);
