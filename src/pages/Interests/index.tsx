@@ -53,6 +53,12 @@ const Interests = () => {
             './interests/taekwondo/taekwondo_1.gif',
             './interests/taekwondo/taekwondo_2.gif',
             './interests/taekwondo/taekwondo_3.gif',
+            './interests/taekwondo/taekwondo_4.jpg',
+            './interests/taekwondo/taekwondo_5.jpg',
+            './interests/taekwondo/taekwondo_6.jpg',
+            './interests/taekwondo/taekwondo_7.jpg',
+            './interests/taekwondo/taekwondo_8.gif',
+            './interests/taekwondo/taekwondo_9.gif',
           ]}
           minWait={3000}
           waitRange={3000}
