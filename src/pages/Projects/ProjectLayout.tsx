@@ -49,6 +49,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
             {project.url ? (
               <a
                 href={project.url}
+                target='_blank'
                 rel='noreferrer'
                 style={{
                   backgroundColor: 'transparent',
@@ -68,6 +69,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
             {project.github ? (
               <a
                 href={project.github}
+                target='_blank'
                 rel='noreferrer'
                 style={{
                   backgroundColor: 'transparent',
@@ -76,7 +78,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                 }}>
                 <img
                   className='clickable'
-                  src='/github.png'
+                  src='/socials/github.png'
                   alt='github'
                   height='50px'
                 />

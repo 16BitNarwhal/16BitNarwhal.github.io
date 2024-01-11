@@ -104,8 +104,71 @@ const Header = () => {
   return (
     <div id='header' className='App-header'>
       {/* headshot, when clicked/waved switches to 16bitnarwhal */}
-      <h1>Eric Zhang</h1>
-      <p>Software Engineer, Creator, Learner</p>
+      <h1
+        style={{
+          margin: 0,
+        }}>
+        Eric Zhang
+      </h1>
+      <p
+        style={{
+          margin: '20px',
+        }}>
+        Software Engineer, Creator, Learner
+      </p>
+      <div className='socials'>
+        <a
+          href='https://www.linkedin.com/in/eric-s-zhang/'
+          target='_blank'
+          rel='noreferrer'>
+          <img
+            src='/socials/linkedin.png'
+            alt='LinkedIn'
+            className='clickable'
+          />
+        </a>
+        <a
+          href='https://github.com/16BitNarwhal/'
+          target='_blank'
+          rel='noreferrer'>
+          <img src='/socials/github.png' alt='GitHub' className='clickable' />
+        </a>
+        <a href='mailto:ericzh1616@gmail.com' target='_blank' rel='noreferrer'>
+          <img src='/socials/mail.png' alt='Email' className='clickable' />
+        </a>
+        <a
+          href='https://www.instagram.com/16bitnarwhal/'
+          target='_blank'
+          rel='noreferrer'>
+          <img
+            src='/socials/instagram.png'
+            alt='Instagram'
+            className='clickable'
+          />
+        </a>
+        <a
+          href='https://devpost.com/ericzh1616'
+          target='_blank'
+          rel='noreferrer'>
+          <img src='/socials/devpost.png' alt='Devpost' className='clickable' />
+        </a>
+        <a
+          href='https://16bitnarwhal.itch.io/'
+          target='_blank'
+          rel='noreferrer'>
+          <img src='/socials/itchio.png' alt='Itch.io' className='clickable' />
+        </a>
+        <a
+          href='https://codeforces.com/profile/16BitNarwhal'
+          target='_blank'
+          rel='noreferrer'>
+          <img
+            src='/socials/codeforces.png'
+            alt='Codeforces'
+            className='clickable'
+          />
+        </a>
+      </div>
     </div>
   );
 };
