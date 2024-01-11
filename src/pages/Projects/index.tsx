@@ -44,6 +44,13 @@ const Projects = () => {
             year: '2022',
           }}
         />
+        <ProjectCard
+          project={{
+            title: 'Genetic',
+            image: 'project/genetic/two_corners.gif',
+            year: '2022',
+          }}
+        />
       </div>
     </div>
   );

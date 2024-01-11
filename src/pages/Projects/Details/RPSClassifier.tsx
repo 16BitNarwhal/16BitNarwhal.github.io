@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectLayout from '../ProjectLayout';
 
-const Refashion = () => {
+const RPSClassifier = () => {
   return (
     <ProjectLayout
       project={{
@@ -59,4 +59,4 @@ const Refashion = () => {
   );
 };
 
-export default Refashion;
+export default RPSClassifier;

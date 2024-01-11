@@ -7,6 +7,7 @@ import ScoreSwipe from './Details/ScoreSwipe';
 import VOffice from './Details/VOffice';
 import Refashion from './Details/Refashion';
 import RPSClassifier from './Details/RPSClassifier';
+import Genetic from './Details/Genetic';
 
 const Project = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,8 @@ const Project = () => {
       return <Refashion />;
     case 'rpsclassifier':
       return <RPSClassifier />;
+    case 'genetic':
+      return <Genetic />;
     default:
       return <Error />;
   }
