@@ -37,8 +37,6 @@ const Interests = () => {
           boxShadow: '0 0 15px 5px rgba(0, 0, 0, 0.3)',
         }}>
         <Interest
-          minWait={1000}
-          waitRange={0}
           images={[
             './interests/climb/climb_1.jpg',
             './interests/climb/climb_2.jpg',
@@ -64,8 +62,6 @@ const Interests = () => {
             './interests/taekwondo/taekwondo_9.gif',
             './interests/taekwondo/taekwondo_10.jpg',
           ]}
-          minWait={3000}
-          waitRange={3000}
           hoverText='Taekwondo'
         />
         <Interest

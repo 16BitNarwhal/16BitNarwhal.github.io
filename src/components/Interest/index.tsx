@@ -19,7 +19,7 @@ const Interest = ({
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (minWait === undefined) minWait = 3000;
+    if (minWait === undefined) minWait = 10000;
     if (waitRange === undefined) waitRange = 10000;
     const wait = Math.floor(Math.random() * waitRange!) + minWait!;
     setTimeout(() => {

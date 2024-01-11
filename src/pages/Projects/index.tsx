@@ -37,6 +37,13 @@ const Projects = () => {
             year: '2023',
           }}
         />
+        <ProjectCard
+          project={{
+            title: 'RPSClassifier',
+            image: 'project/rpsclassifier/thumbnail.png',
+            year: '2022',
+          }}
+        />
       </div>
     </div>
   );

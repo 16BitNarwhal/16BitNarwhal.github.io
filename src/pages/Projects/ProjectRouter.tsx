@@ -6,6 +6,7 @@ import Error from './Error';
 import ScoreSwipe from './Details/ScoreSwipe';
 import VOffice from './Details/VOffice';
 import Refashion from './Details/Refashion';
+import RPSClassifier from './Details/RPSClassifier';
 
 const Project = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,8 @@ const Project = () => {
       return <VOffice />;
     case 'refashion':
       return <Refashion />;
+    case 'rpsclassifier':
+      return <RPSClassifier />;
     default:
       return <Error />;
   }
