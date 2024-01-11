@@ -43,8 +43,11 @@ const Interests = () => {
             './interests/climb/climb_1.jpg',
             './interests/climb/climb_2.jpg',
             './interests/climb/climb_3.jpg',
-            './interests/climb/climb_4.jpg',
-            './interests/climb/climb_5.jpg',
+            './interests/climb/climb_4.gif',
+            './interests/climb/climb_5.gif',
+            './interests/climb/climb_6.gif',
+            './interests/climb/climb_7.gif',
+            './interests/climb/climb_8.gif',
           ]}
           hoverText='Rock Climbing'
         />
@@ -59,74 +62,68 @@ const Interests = () => {
             './interests/taekwondo/taekwondo_7.jpg',
             './interests/taekwondo/taekwondo_8.gif',
             './interests/taekwondo/taekwondo_9.gif',
+            './interests/taekwondo/taekwondo_10.jpg',
           ]}
           minWait={3000}
           waitRange={3000}
           hoverText='Taekwondo'
         />
         <Interest
-          images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
-          ]}
+          images={['./interests/piano/piano_1.gif']}
           hoverText='Piano'
         />
         <Interest
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
+            './interests/percussion/percussion_1.gif',
+            './interests/percussion/percussion_2.gif',
+            './interests/percussion/percussion_3.jpg',
+            './interests/percussion/percussion_4.jpg',
+            './interests/percussion/percussion_5.jpg',
+            './interests/percussion/percussion_6.jpg',
+            './interests/percussion/percussion_7.jpg',
+            './interests/percussion/percussion_8.gif',
           ]}
           hoverText='Percussion'
         />
         <Interest
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
+            './interests/skateboard/1.gif',
+            './interests/skateboard/2.gif',
+            './interests/skateboard/3.gif',
           ]}
           hoverText='Skateboarding'
         />
         <Interest
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
+            './interests/read/read_1.jpg',
+            './interests/read/read_2.jpg',
+            './interests/read/read_3.jpg',
           ]}
           hoverText='Reading'
         />
         <Interest
-          images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
-          ]}
+          images={['./interests/skipping/skipping_1.gif']}
           hoverText='Skipping'
         />
         <Interest
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
+            './interests/hackathon/1.jpg',
+            './interests/hackathon/2.jpg',
+            './interests/hackathon/3.jpg',
+            './interests/hackathon/4.jpg',
           ]}
           hoverText='Hackathons'
         />
+        <Interest images={['./interests/ski/ski_1.jpg']} hoverText='Skiing' />
         <Interest
           images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
+            './interests/creating/1.jpg',
+            './interests/creating/2.jpg',
+            './interests/creating/3.jpg',
+            './interests/creating/4.gif',
+            './interests/creating/5.gif',
           ]}
-          hoverText='Skiing'
-        />
-        <Interest
-          images={[
-            'https://picsum.photos/200/200',
-            'https://picsum.photos/200/300',
-            'https://picsum.photos/300/200',
-          ]}
-          hoverText='Making'
+          hoverText='Creating'
         />
       </div>
     </div>
