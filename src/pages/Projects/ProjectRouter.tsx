@@ -8,11 +8,14 @@ import VOffice from './Details/VOffice';
 import Refashion from './Details/Refashion';
 import RPSClassifier from './Details/RPSClassifier';
 import Genetic from './Details/Genetic';
+import Portfolio from './Details/Portfolio';
 
 const Project = () => {
   const { id } = useParams<{ id: string }>();
 
   switch (id) {
+    case 'portfolio-site':
+      return <Portfolio />;
     case 'scoreswipe':
       return <ScoreSwipe />;
     case 'voffice':

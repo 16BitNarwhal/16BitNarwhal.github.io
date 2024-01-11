@@ -18,6 +18,13 @@ const Projects = () => {
         }}>
         <ProjectCard
           project={{
+            title: 'Portfolio',
+            image: 'project/portfolio/portfolio.png',
+            year: '2024',
+          }}
+        />
+        <ProjectCard
+          project={{
             title: 'Score Swipe',
             image: 'project/scoreswipe/thumbnail.png',
             year: '2023',
