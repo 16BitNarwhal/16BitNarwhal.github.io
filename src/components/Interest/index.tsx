@@ -19,19 +19,19 @@ const Interest = ({
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (minWait === undefined) minWait = 10000;
-    if (waitRange === undefined) waitRange = 10000;
-    const wait = Math.floor(Math.random() * waitRange!) + minWait!;
-    setTimeout(() => {
-      const newIndex = Math.floor(Math.random() * images.length);
-      if (newIndex === index) {
-        if (newIndex === images.length - 1) setIndex(0);
-        else setIndex(newIndex + 1);
-        return;
-      }
-      const newImage = images[newIndex];
-      setIndex(newIndex);
-    }, wait);
+    // if (minWait === undefined) minWait = 10000;
+    // if (waitRange === undefined) waitRange = 10000;
+    // const wait = Math.floor(Math.random() * waitRange!) + minWait!;
+    // setTimeout(() => {
+    //   const newIndex = Math.floor(Math.random() * images.length);
+    //   if (newIndex === index) {
+    //     if (newIndex === images.length - 1) setIndex(0);
+    //     else setIndex(newIndex + 1);
+    //     return;
+    //   }
+    //   const newImage = images[newIndex];
+    //   setIndex(newIndex);
+    // }, wait);
   }, [index]);
 
   return (

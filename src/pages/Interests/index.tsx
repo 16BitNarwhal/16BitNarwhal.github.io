@@ -41,51 +41,48 @@ const Interests = () => {
             './interests/climb/climb_1.jpg',
             './interests/climb/climb_2.jpg',
             './interests/climb/climb_3.jpg',
-            './interests/climb/climb_4.gif',
-            './interests/climb/climb_5.gif',
-            './interests/climb/climb_6.gif',
-            './interests/climb/climb_7.gif',
-            './interests/climb/climb_8.gif',
+            // './interests/climb/climb_4.gif',
+            // './interests/climb/climb_5.gif',
+            // './interests/climb/climb_6.gif',
+            // './interests/climb/climb_7.gif',
+            // './interests/climb/climb_8.gif',
           ]}
           hoverText='Rock Climbing'
         />
         <Interest
           images={[
-            './interests/taekwondo/taekwondo_1.gif',
-            './interests/taekwondo/taekwondo_2.gif',
-            './interests/taekwondo/taekwondo_3.gif',
+            // './interests/taekwondo/taekwondo_1.gif',
+            // './interests/taekwondo/taekwondo_2.gif',
+            // './interests/taekwondo/taekwondo_3.gif',
             './interests/taekwondo/taekwondo_4.jpg',
             './interests/taekwondo/taekwondo_5.jpg',
             './interests/taekwondo/taekwondo_6.jpg',
             './interests/taekwondo/taekwondo_7.jpg',
-            './interests/taekwondo/taekwondo_8.gif',
-            './interests/taekwondo/taekwondo_9.gif',
+            // './interests/taekwondo/taekwondo_8.gif',
+            // './interests/taekwondo/taekwondo_9.gif',
             './interests/taekwondo/taekwondo_10.jpg',
           ]}
           hoverText='Taekwondo'
         />
         <Interest
-          images={['./interests/piano/piano_1.gif']}
-          hoverText='Piano'
-        />
-        <Interest
           images={[
-            './interests/percussion/percussion_1.gif',
-            './interests/percussion/percussion_2.gif',
+            // './interests/piano/piano_1.gif',
+            // './interests/percussion/percussion_1.gif',
+            // './interests/percussion/percussion_2.gif',
             './interests/percussion/percussion_3.jpg',
             './interests/percussion/percussion_4.jpg',
             './interests/percussion/percussion_5.jpg',
             './interests/percussion/percussion_6.jpg',
             './interests/percussion/percussion_7.jpg',
-            './interests/percussion/percussion_8.gif',
+            // './interests/percussion/percussion_8.gif',
           ]}
-          hoverText='Percussion'
+          hoverText='Music'
         />
         <Interest
           images={[
             './interests/skateboard/1.gif',
-            './interests/skateboard/2.gif',
-            './interests/skateboard/3.gif',
+            // './interests/skateboard/2.gif',
+            // './interests/skateboard/3.gif',
           ]}
           hoverText='Skateboarding'
         />
@@ -116,8 +113,8 @@ const Interests = () => {
             './interests/creating/1.jpg',
             './interests/creating/2.jpg',
             './interests/creating/3.jpg',
-            './interests/creating/4.gif',
-            './interests/creating/5.gif',
+            // './interests/creating/4.gif',
+            // './interests/creating/5.gif',
           ]}
           hoverText='Creating'
         />
