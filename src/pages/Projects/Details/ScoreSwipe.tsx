@@ -37,7 +37,7 @@ const ScoreSwipe = () => {
       <h2>Development</h2>
       <div>
         <img
-          src='/project/scoreswipe/mlkit landmarks.png'
+          src='project/scoreswipe/mlkit landmarks.png'
           height='150px'
           alt='ML Kit facial landmarks'
           style={{ float: 'left', margin: '0 0 1rem 1rem' }}
@@ -71,12 +71,12 @@ const ScoreSwipe = () => {
         }}>
         <img
           width='320px'
-          src='/project/scoreswipe/demo_create.gif'
+          src='project/scoreswipe/demo_create.gif'
           alt='ScoreSwipe demo'
         />
         <img
           width='320px'
-          src='/project/scoreswipe/demo_edit.gif'
+          src='project/scoreswipe/demo_edit.gif'
           alt='ScoreSwipe demo'
         />
       </div>

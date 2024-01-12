@@ -23,7 +23,7 @@ const Refashion = () => {
       <h2>Overview</h2>
       <p style={{ textAlign: 'right' }}>
         <img
-          src='/project/refashion/thumbnail.jpg'
+          src='project/refashion/thumbnail.jpg'
           alt='Refashion'
           height='200px'
           style={{ float: 'right', margin: '0 .75rem' }}

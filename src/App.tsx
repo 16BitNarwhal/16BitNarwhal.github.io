@@ -122,7 +122,7 @@ const Header = () => {
           target='_blank'
           rel='noreferrer'>
           <img
-            src='/socials/linkedin.png'
+            src='socials/linkedin.png'
             alt='LinkedIn'
             className='clickable'
           />
@@ -131,17 +131,17 @@ const Header = () => {
           href='https://github.com/16BitNarwhal/'
           target='_blank'
           rel='noreferrer'>
-          <img src='/socials/github.png' alt='GitHub' className='clickable' />
+          <img src='socials/github.png' alt='GitHub' className='clickable' />
         </a>
         <a href='mailto:ericzh1616@gmail.com' target='_blank' rel='noreferrer'>
-          <img src='/socials/mail.png' alt='Email' className='clickable' />
+          <img src='socials/mail.png' alt='Email' className='clickable' />
         </a>
         <a
           href='https://www.instagram.com/16bitnarwhal/'
           target='_blank'
           rel='noreferrer'>
           <img
-            src='/socials/instagram.png'
+            src='socials/instagram.png'
             alt='Instagram'
             className='clickable'
           />
@@ -150,20 +150,20 @@ const Header = () => {
           href='https://devpost.com/ericzh1616'
           target='_blank'
           rel='noreferrer'>
-          <img src='/socials/devpost.png' alt='Devpost' className='clickable' />
+          <img src='socials/devpost.png' alt='Devpost' className='clickable' />
         </a>
         <a
           href='https://16bitnarwhal.itch.io/'
           target='_blank'
           rel='noreferrer'>
-          <img src='/socials/itchio.png' alt='Itch.io' className='clickable' />
+          <img src='socials/itchio.png' alt='Itch.io' className='clickable' />
         </a>
         <a
           href='https://codeforces.com/profile/16BitNarwhal'
           target='_blank'
           rel='noreferrer'>
           <img
-            src='/socials/codeforces.png'
+            src='socials/codeforces.png'
             alt='Codeforces'
             className='clickable'
           />

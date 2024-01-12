@@ -20,7 +20,7 @@ const RPSClassifier = () => {
       <h2>Overview</h2>
       <p style={{ textAlign: 'right' }}>
         <img
-          src='/project/RPSClassifier/thumbnail.png'
+          src='project/RPSClassifier/thumbnail.png'
           alt='RPS Classifier'
           height='200px'
           style={{ float: 'right', margin: '0 0.75rem' }}
