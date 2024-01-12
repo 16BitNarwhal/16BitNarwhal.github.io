@@ -19,7 +19,7 @@ const Genetic = () => {
       <h2>Overview</h2>
       <p style={{ textAlign: 'right' }}>
         <img
-          src='project/genetic/two_corners.gif'
+          src='../project/genetic/two_corners.gif'
           alt='Genetic'
           height='300px'
           style={{ float: 'right', margin: '0 0.75rem' }}
@@ -69,7 +69,7 @@ const Genetic = () => {
         save the network that you see above. I also use matplotlib and NetworkX
         to visualize this saved network.
         <img
-          src='project/genetic/vis_network.png'
+          src='../project/genetic/vis_network.png'
           alt='Network Visualization'
           height='400px'
         />
@@ -80,7 +80,7 @@ const Genetic = () => {
           textAlign: 'left',
         }}>
         <img
-          src='project/genetic/circle.gif'
+          src='../project/genetic/circle.gif'
           alt='More Complex Task'
           height='300px'
           style={{

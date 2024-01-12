@@ -11,7 +11,7 @@ const Portfolio = () => {
         github: 'https://github.com/16BitNarwhal/portfolio-site/',
       }}>
       <h2>Overview</h2>
-      <p style={{ textAlign: 'right' }}>
+      <p>
         It's just this website! I built this site to showcase both who I am and
         what I've done. Also computer vision is cool 😎
       </p>

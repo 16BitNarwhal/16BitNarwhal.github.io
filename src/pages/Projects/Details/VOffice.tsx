@@ -21,7 +21,7 @@ const VOffice = () => {
             margin: '0 .75rem',
             height: '200px',
           }}
-          src='project/voffice/1.png'
+          src='../project/voffice/1.png'
           alt='VOffice'
         />
         <b>VOffice</b> is a virtual reality office environment designed for

@@ -14,7 +14,7 @@ const Project = () => {
   const { id } = useParams<{ id: string }>();
 
   switch (id) {
-    case 'portfolio-site':
+    case 'portfolio':
       return <Portfolio />;
     case 'scoreswipe':
       return <ScoreSwipe />;

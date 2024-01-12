@@ -58,7 +58,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                 }}>
                 <img
                   className='clickable'
-                  src='play.png'
+                  src='/play.png'
                   alt='demo'
                   height='50px'
                 />
@@ -78,7 +78,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
                 }}>
                 <img
                   className='clickable'
-                  src='socials/github.png'
+                  src='/socials/github.png'
                   alt='github'
                   height='50px'
                 />
@@ -95,7 +95,7 @@ const ProjectLayout = ({ children, project }: ProjectLayoutProps) => {
               }}>
               <img
                 className='clickable'
-                src='close.png'
+                src='/close.png'
                 alt='close'
                 height='50px'
               />
