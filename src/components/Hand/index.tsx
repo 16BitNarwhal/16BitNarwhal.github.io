@@ -55,6 +55,10 @@ const HandsContainer = () => {
     const constraints = {
       video: { width: { min: 480 }, height: { min: 360 } },
     };
+    if (navigator.mediaDevices === undefined) {
+      setVideoError(true);
+      return;
+    }
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
@@ -65,6 +69,7 @@ const HandsContainer = () => {
       })
       .catch((err) => {
         setVideoError(true);
+        return;
       });
     const sendToMediaPipe = async () => {
       if (inputVideoRef.current) {
