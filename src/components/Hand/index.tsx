@@ -12,6 +12,7 @@ enum Click {
 }
 
 const HandsContainer = () => {
+  const [videoError, setVideoError] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [inputVideoReady, setInputVideoReady] = useState(false);
   const [gestureRecognizer, setGestureRecognizer] =
@@ -63,7 +64,6 @@ const HandsContainer = () => {
         sendToMediaPipe();
       })
       .catch((err) => {
-        console.log(err);
         setVideoError(true);
       });
     const sendToMediaPipe = async () => {
@@ -205,6 +205,32 @@ const HandsContainer = () => {
       setCursorPosition({ x, y });
     }
 
+    handleCursorPosition({ x, y });
+
+    if (!results.gestures) return;
+    if (!results.gestures[0]) return;
+    if (!results.gestures[0][0]) return;
+    const gesture = results.gestures[0][0];
+    if (gesture.categoryName === 'Closed_Fist') {
+      if (!isHandClickGesture.current) {
+        simulateClick({ x, y }, Click.left);
+        isHandClickGesture.current = true;
+      }
+    } else {
+      isHandClickGesture.current = false;
+    }
+    if (Date.now() - lastRightClickTime.current < 1000) return;
+    if (gesture.categoryName === 'ILoveYou') {
+      if (!isHandContextGesture.current) {
+        simulateClick({ x, y }, Click.right);
+        isHandContextGesture.current = true;
+      }
+    } else {
+      isHandContextGesture.current = false;
+    }
+  };
+
+  const handleCursorPosition = ({ x, y }: { x: number; y: number }) => {
     const cursorSpeed =
       Math.sqrt(
         Math.pow(x - prevCursorPosition.current.x, 2) +
@@ -249,28 +275,6 @@ const HandsContainer = () => {
         lastElementHovered.current = element;
       }
     }
-
-    if (!results.gestures) return;
-    if (!results.gestures[0]) return;
-    if (!results.gestures[0][0]) return;
-    const gesture = results.gestures[0][0];
-    if (gesture.categoryName === 'Closed_Fist') {
-      if (!isHandClickGesture.current) {
-        simulateClick({ x, y }, Click.left);
-        isHandClickGesture.current = true;
-      }
-    } else {
-      isHandClickGesture.current = false;
-    }
-    if (Date.now() - lastRightClickTime.current < 1000) return;
-    if (gesture.categoryName === 'ILoveYou') {
-      if (!isHandContextGesture.current) {
-        simulateClick({ x, y }, Click.right);
-        isHandContextGesture.current = true;
-      }
-    } else {
-      isHandContextGesture.current = false;
-    }
   };
 
   const simulateClick = (position: { x: number; y: number }, type: Click) => {
@@ -305,6 +309,7 @@ const HandsContainer = () => {
   const prevMousePosition = useRef({ x: 0, y: 0 });
   const prevMouseTime = useRef(0);
   const stopMouseInterval = useRef<NodeJS.Timeout | null>(null);
+
   // mouse control
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -325,6 +330,9 @@ const HandsContainer = () => {
       } else {
         usingMouse.current = false;
       }
+      if (videoError) {
+        handleCursorPosition({ x: e.clientX, y: e.clientY });
+      }
       prevMousePosition.current = { x: e.clientX, y: e.clientY };
       prevMouseTime.current = Date.now();
     };
@@ -337,9 +345,7 @@ const HandsContainer = () => {
         prev.className = prev.className.replace(' hover', '');
       }
     };
-  }, []);
-
-  const [videoError, setVideoError] = useState(false);
+  }, [videoError]);
 
   return (
     <div className='hands-container ignore-mouse'>
