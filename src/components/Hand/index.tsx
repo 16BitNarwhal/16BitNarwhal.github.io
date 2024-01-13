@@ -50,15 +50,22 @@ const HandsContainer = () => {
     if (!inputVideoReady && !gestureRecognizer) {
       return;
     }
+
     const constraints = {
       video: { width: { min: 480 }, height: { min: 360 } },
     };
-    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      if (inputVideoRef.current) {
-        inputVideoRef.current.srcObject = stream;
-      }
-      sendToMediaPipe();
-    });
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then((stream) => {
+        if (inputVideoRef.current) {
+          inputVideoRef.current.srcObject = stream;
+        }
+        sendToMediaPipe();
+      })
+      .catch((err) => {
+        console.log(err);
+        setVideoError(true);
+      });
     const sendToMediaPipe = async () => {
       if (inputVideoRef.current) {
         if (!inputVideoRef.current.videoWidth || !gestureRecognizer) {
@@ -159,7 +166,6 @@ const HandsContainer = () => {
   const processResults = (results: GestureRecognizerResult) => {
     let x = 0;
     let y = 0;
-    // console.log(usingMouse.current);
     if (usingMouse.current) {
       x = prevMousePosition.current.x;
       y = prevMousePosition.current.y;
@@ -333,16 +339,36 @@ const HandsContainer = () => {
     };
   }, []);
 
+  const [videoError, setVideoError] = useState(false);
+
   return (
     <div className='hands-container ignore-mouse'>
-      <video
-        autoPlay
-        style={{ display: 'none' }}
-        ref={(el) => {
-          inputVideoRef.current = el;
-          setInputVideoReady(!!el);
-        }}
-      />
+      {videoError ? (
+        <div
+          className='error'
+          style={{
+            position: 'fixed',
+            left: '50%',
+            top: '10px',
+            transform: 'translate(-50%,0)',
+          }}>
+          <h1>Oops!</h1>
+          <h2>Your webcam is not working.</h2>
+          <p>Enable permissions or try refreshing the page</p>
+        </div>
+      ) : (
+        <video
+          autoPlay
+          onError={(e) => {
+            setVideoError(true);
+          }}
+          style={{ display: 'none' }}
+          ref={(el) => {
+            inputVideoRef.current = el;
+            setInputVideoReady(!!el);
+          }}
+        />
+      )}
 
       <div
         className='cursor'

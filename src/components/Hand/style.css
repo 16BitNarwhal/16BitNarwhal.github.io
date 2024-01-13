@@ -8,3 +8,24 @@
   opacity: 0;
   z-index: -1;
 }
+
+.error {
+  transform: scale(0.5);
+  opacity: 1;
+  background-color: #ff0000;
+  padding: 0 20px;
+  border-radius: 10px;
+  z-index: 500;
+  animation: fadeOut 2s ease-out 5s forwards;
+}
+
+/* animation */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
