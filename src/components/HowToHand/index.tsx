@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.css';
 
 type HowToHandProps = {
   close: () => void;
@@ -14,13 +15,15 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
         top: '50%',
         transform: 'translate(-50%, -50%)',
         backgroundColor: 'rgba(255, 255, 255, 0.99)',
-        transition: 'opacity 0.5s ease-in-out',
         padding: '20px',
         borderRadius: '15px',
         boxShadow: '0 0 10px 1px rgba(0, 0, 0, 0.5)',
       }}>
+      <h1>Welcome to my site!</h1>
       <h1>Use your hand to navigate!</h1>
-      <p style={{ marginTop: '-15px' }}>Must accept camera permissions</p>
+      <p style={{ marginTop: '-15px' }}>
+        Please accept camera permissions to try this out!
+      </p>
       <div
         style={{
           display: 'flex',
@@ -31,7 +34,7 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
         }}>
         <span>🤚Move Around</span>
         <span>✊Left Click</span>
-        <span>🤟Open Nav</span>
+        <span>🤟Open Navigation</span>
       </div>
       <button
         onClick={close}

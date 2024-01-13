@@ -13,7 +13,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
-  const [isGesture, setIsGesture] = useState(false);
+  const [isGesture, setIsGesture] = useState(true);
   const [isHowToHand, setIsHowToHand] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {

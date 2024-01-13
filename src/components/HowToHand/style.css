@@ -1,0 +1,12 @@
+.how-to-hand {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translate(-50%, -150%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
