@@ -232,6 +232,8 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
   const lastFrameTime = useRef(0);
+  const lastClickTime = useRef(0); // Prevent rapid successive clicks
+  const clickDebounceTime = 300; // Minimum ms between clicks
   // Smoothing function to reduce jitter
   const smoothPosition = (newX: number, newY: number) => {
     const now = Date.now();
@@ -356,8 +358,12 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     const gesture = results.gestures[0][0];
     if (gesture.categoryName === 'Closed_Fist') {
       if (!isHandClickGesture.current) {
-        simulateClick({ x, y }, Click.left);
-        isHandClickGesture.current = true;
+        const now = Date.now();
+        if (now - lastClickTime.current >= clickDebounceTime) {
+          simulateClick({ x, y }, Click.left);
+          lastClickTime.current = now;
+          isHandClickGesture.current = true;
+        }
       }
     } else {
       isHandClickGesture.current = false;
@@ -425,14 +431,11 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
       position.y
     );
     if (!element) return;
+    
+    // Dispatch the click event - this will handle links naturally
     element.dispatchEvent(clickEvent);
-    if (element.tagName === 'A') {
-      const href = element.getAttribute('href');
-      if (href) {
-        window.open(href, '_blank')?.focus();
-      }
-    }
-    console.log(element);
+    
+    // Visual feedback
     element.className += ' mouse_clicked';
     setTimeout(() => {
       element.className = element.className.replace(' mouse_clicked', '');
