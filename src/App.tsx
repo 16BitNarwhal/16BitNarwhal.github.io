@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import Projects from './pages/Projects';
-import Interests from './pages/Interests';
-import ProjectRouter from './pages/Projects/ProjectRouter';
+
 
 import HandsContainer from './components/Hand';
 
@@ -51,30 +49,20 @@ const App = () => {
             position: 'fixed',
             top: '20px',
             right: '20px',
-            width: '60px',
-            height: '60px',
+            width: '50px',
+            height: '50px',
             borderRadius: '50%',
-            backgroundColor: isGesture ? 'rgba(255, 100, 100, 0.8)' : 'rgba(100, 255, 100, 0.8)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            color: '#fff',
+            backgroundColor: isGesture ? '#000000' : '#ffffff',
+            color: isGesture ? '#ffffff' : '#000000',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             cursor: 'pointer',
-            border: 'none',
+            border: '1px solid #000000',
             zIndex: 1000,
-            fontSize: '24px',
-            transition: 'all 0.3s ease',
-            transform: 'scale(1)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+            fontSize: '20px',
+            transition: 'all 0.2s ease',
           }}
           title={isGesture ? 'Disable hand tracking' : 'Enable hand tracking'}>
           {isGesture ? '✋' : '🤚'}
@@ -83,16 +71,13 @@ const App = () => {
           <div
             style={{
               position: 'fixed',
-              top: '90px',
+              top: '80px',
               right: '20px',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: '#fff',
-              padding: '8px 12px',
-              borderRadius: '20px',
+              color: '#000000',
               fontSize: '12px',
               zIndex: 999,
               pointerEvents: 'none',
-              animation: 'fadeIn 0.3s ease',
+              opacity: 0.7,
             }}>
             Hand tracking active
           </div>
@@ -100,7 +85,6 @@ const App = () => {
 
         <Routes>
           <Route path='/' element={<Main />} />
-          <Route path='/projects/:id' element={<ProjectRouter />} />
         </Routes>
         <HandsContainer 
           enabled={isGesture} 
@@ -117,19 +101,17 @@ const App = () => {
 const Header = () => {
   return (
     <div id='header' className='App-header'>
-      {/* headshot, when clicked/waved switches to 16bitnarwhal */}
-      <h1
-        style={{
-          margin: 0,
-        }}>
+      <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem', fontWeight: 'normal' }}>
         Eric Zhang
       </h1>
-      <p
-        style={{
-          margin: '20px',
-        }}>
+      <p style={{ margin: '0 0 20px 0', fontSize: '1rem' }}>
         Software Engineer, Creator, Learner
       </p>
+      
+      <h2 style={{ margin: '30px 0 10px 0', fontSize: '1.2rem', fontWeight: 'normal' }}>
+        Links:
+      </h2>
+      
       <div className='socials'>
         <a
           href='https://www.linkedin.com/in/eric-s-zhang/'
@@ -191,9 +173,6 @@ const Main = () => {
   return (
     <div className='main'>
       <Header />
-      <Projects />
-      <Interests />
-      {/* <Achievements /> */}
     </div>
   );
 };
