@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import Projects from './pages/Projects';
 import Interests from './pages/Interests';
-import Achievements from './pages/Achievements';
 import ProjectRouter from './pages/Projects/ProjectRouter';
 
 import HandsContainer from './components/Hand';
 import ContextMenu from './components/ContextMenu';
 import HowToHand from './components/HowToHand';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const App = () => {
   const [contextMenuActive, setContextMenuActive] = useState(false);
-  const [isGesture, setIsGesture] = useState(true);
+  const [isGesture, setIsGesture] = useState(false);
   const [isHowToHand, setIsHowToHand] = useState(false);
 
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -47,9 +46,28 @@ const App = () => {
 
   useEffect(() => {
     const stylesheet = document.styleSheets[0];
+    // Remove any existing cursor rules
+    try {
+      for (let i = 0; i < stylesheet.cssRules.length; i++) {
+        if (stylesheet.cssRules[i].cssText.includes('cursor: none')) {
+          stylesheet.deleteRule(i);
+          break;
+        }
+      }
+    } catch (e) {
+      // Ignore errors when accessing stylesheet rules
+    }
+    
     if (isGesture) {
-      stylesheet.insertRule('* { cursor: none !important; }');
-      setIsHowToHand(true);
+      try {
+        stylesheet.insertRule('* { cursor: none !important; }', 0);
+        setIsHowToHand(true);
+      } catch (e) {
+        // Fallback if insertRule fails
+        console.warn('Could not insert cursor rule:', e);
+      }
+    } else {
+      setIsHowToHand(false);
     }
   }, [isGesture]);
 
@@ -57,44 +75,67 @@ const App = () => {
     <BrowserRouter>
       <div id='paint-on'></div> {/* for paint effect */}
       <div className='App' onContextMenu={handleContextMenu}>
-        {!isGesture ? (
-          <button
-            onClick={() => setIsGesture(true)}
+        <button
+          onClick={() => setIsGesture(!isGesture)}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            backgroundColor: isGesture ? 'rgba(255, 100, 100, 0.8)' : 'rgba(100, 255, 100, 0.8)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            cursor: 'pointer',
+            border: 'none',
+            zIndex: 1000,
+            fontSize: '24px',
+            transition: 'all 0.3s ease',
+            transform: 'scale(1)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+          }}
+          title={isGesture ? 'Disable hand tracking' : 'Enable hand tracking'}>
+          {isGesture ? '✋' : '🤚'}
+        </button>
+        {isGesture && (
+          <div
             style={{
               position: 'fixed',
-              top: '50%',
-              right: 0,
-              transform: 'translateY(-50%)',
-              width: '100px',
-              height: '100px',
-              borderRadius: '50% 0 0 50%',
-              backgroundColor: 'rgba(255, 255, 100, 0.5)',
-              boxShadow: '0 0 10px 1px rgba(255, 255, 255, 0.5)',
-              color: '#000',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              cursor: 'pointer',
-              border: 'none',
-              zIndex: 100,
+              top: '90px',
+              right: '20px',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: '#fff',
+              padding: '8px 12px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              zIndex: 999,
+              pointerEvents: 'none',
+              animation: 'fadeIn 0.3s ease',
             }}>
-            <b>Click me!</b>
-          </button>
-        ) : (
-          <></>
+            Hand tracking active
+          </div>
         )}
         <ContextMenu />
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path='/projects/:id' element={<ProjectRouter />} />
         </Routes>
-        <HandsContainer />
-        {isHowToHand ? (
+        <HandsContainer enabled={isGesture} />
+        {isHowToHand && isGesture ? (
           <HowToHand close={() => setIsHowToHand(false)} />
-        ) : (
-          <></>
-        )}
+        ) : null}
       </div>
     </BrowserRouter>
   );

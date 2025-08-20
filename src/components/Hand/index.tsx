@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   GestureRecognizer,
   FilesetResolver,
@@ -11,7 +11,11 @@ enum Click {
   right = 'contextmenu',
 }
 
-const HandsContainer = () => {
+interface HandsContainerProps {
+  enabled: boolean;
+}
+
+const HandsContainer = ({ enabled }: HandsContainerProps) => {
   const [videoError, setVideoError] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [inputVideoReady, setInputVideoReady] = useState(false);
@@ -25,7 +29,7 @@ const HandsContainer = () => {
 
   // webcam control
   useEffect(() => {
-    if (!inputVideoReady) return;
+    if (!enabled || !inputVideoReady) return;
     if (started.current) return;
     started.current = true;
     if (inputVideoRef.current) {
@@ -45,9 +49,22 @@ const HandsContainer = () => {
       };
       initGesture();
     }
-  }, [inputVideoReady]);
+  }, [inputVideoReady, enabled]);
 
   useEffect(() => {
+    if (!enabled) {
+      // Clean up when disabled
+      if (inputVideoRef.current && inputVideoRef.current.srcObject) {
+        const stream = inputVideoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        inputVideoRef.current.srcObject = null;
+      }
+      setGestureRecognizer(null);
+      started.current = false;
+      setInputVideoReady(false);
+      return;
+    }
+
     if (!inputVideoReady && !gestureRecognizer) {
       return;
     }
@@ -90,10 +107,9 @@ const HandsContainer = () => {
         requestAnimationFrame(sendToMediaPipe);
       }
     };
-  }, [gestureRecognizer]);
+  }, [gestureRecognizer, enabled]);
 
   // paint splatter effect
-  const body = document.body;
 
   const splatterColors = [
     '#ff0000',
@@ -354,44 +370,48 @@ const HandsContainer = () => {
 
   return (
     <div className='hands-container ignore-mouse'>
-      {videoError ? (
-        <div
-          className='error'
-          style={{
-            position: 'fixed',
-            left: '50%',
-            top: '10px',
-            transform: 'translate(-50%,0)',
-          }}>
-          <h1>Oops!</h1>
-          <h2>Your webcam is not working.</h2>
-          <p>Enable permissions or try refreshing the page</p>
-        </div>
-      ) : (
-        <video
-          autoPlay
-          onError={(e) => {
-            setVideoError(true);
-          }}
-          style={{ display: 'none' }}
-          ref={(el) => {
-            inputVideoRef.current = el;
-            setInputVideoReady(!!el);
-          }}
-        />
-      )}
+      {enabled && (
+        <>
+          {videoError ? (
+            <div
+              className='error'
+              style={{
+                position: 'fixed',
+                left: '50%',
+                top: '10px',
+                transform: 'translate(-50%,0)',
+              }}>
+              <h1>Oops!</h1>
+              <h2>Your webcam is not working.</h2>
+              <p>Enable permissions or try refreshing the page</p>
+            </div>
+          ) : (
+            <video
+              autoPlay
+              onError={(e) => {
+                setVideoError(true);
+              }}
+              style={{ display: 'none' }}
+              ref={(el) => {
+                inputVideoRef.current = el;
+                setInputVideoReady(!!el);
+              }}
+            />
+          )}
 
-      <div
-        className='cursor'
-        style={{
-          position: 'fixed',
-          left: cursorPosition.x - 25,
-          top: cursorPosition.y - 25,
-          fontSize: '50px',
-          zIndex: 999,
-        }}>
-        {isHoveringClickable ? '👆' : '🤚'}
-      </div>
+          <div
+            className='cursor'
+            style={{
+              position: 'fixed',
+              left: cursorPosition.x - 25,
+              top: cursorPosition.y - 25,
+              fontSize: '50px',
+              zIndex: 999,
+            }}>
+            {isHoveringClickable ? '👆' : '🤚'}
+          </div>
+        </>
+      )}
     </div>
   );
 };
