@@ -101,70 +101,67 @@ const App = () => {
 const Header = () => {
   return (
     <div id='header' className='App-header'>
-      <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem', fontWeight: 'normal' }}>
-        Eric Zhang
-      </h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'normal' }}>
+          Eric Zhang
+        </h1>
+        <div className='socials' style={{ display: 'flex', gap: '8px' }}>
+          <a
+            href='https://www.linkedin.com/in/eric-s-zhang/'
+            target='_blank'
+            rel='noreferrer'>
+            <img
+              src='socials/linkedin.png'
+              alt='LinkedIn'
+              className='clickable'
+            />
+          </a>
+          <a
+            href='https://github.com/16BitNarwhal/'
+            target='_blank'
+            rel='noreferrer'>
+            <img src='socials/github.png' alt='GitHub' className='clickable' />
+          </a>
+          <a href='mailto:ericzh1616@gmail.com' target='_blank' rel='noreferrer'>
+            <img src='socials/mail.png' alt='Email' className='clickable' />
+          </a>
+          <a
+            href='https://www.instagram.com/16bitnarwhal/'
+            target='_blank'
+            rel='noreferrer'>
+            <img
+              src='socials/instagram.png'
+              alt='Instagram'
+              className='clickable'
+            />
+          </a>
+          <a
+            href='https://devpost.com/ericzh1616'
+            target='_blank'
+            rel='noreferrer'>
+            <img src='socials/devpost.png' alt='Devpost' className='clickable' />
+          </a>
+          <a
+            href='https://16bitnarwhal.itch.io/'
+            target='_blank'
+            rel='noreferrer'>
+            <img src='socials/itchio.png' alt='Itch.io' className='clickable' />
+          </a>
+          <a
+            href='https://codeforces.com/profile/16BitNarwhal'
+            target='_blank'
+            rel='noreferrer'>
+            <img
+              src='socials/codeforces.png'
+              alt='Codeforces'
+              className='clickable'
+            />
+          </a>
+        </div>
+      </div>
       <p style={{ margin: '0 0 20px 0', fontSize: '1rem' }}>
         Software Engineer, Creator, Learner
       </p>
-      
-      <h2 style={{ margin: '30px 0 10px 0', fontSize: '1.2rem', fontWeight: 'normal' }}>
-        Links:
-      </h2>
-      
-      <div className='socials'>
-        <a
-          href='https://www.linkedin.com/in/eric-s-zhang/'
-          target='_blank'
-          rel='noreferrer'>
-          <img
-            src='socials/linkedin.png'
-            alt='LinkedIn'
-            className='clickable'
-          />
-        </a>
-        <a
-          href='https://github.com/16BitNarwhal/'
-          target='_blank'
-          rel='noreferrer'>
-          <img src='socials/github.png' alt='GitHub' className='clickable' />
-        </a>
-        <a href='mailto:ericzh1616@gmail.com' target='_blank' rel='noreferrer'>
-          <img src='socials/mail.png' alt='Email' className='clickable' />
-        </a>
-        <a
-          href='https://www.instagram.com/16bitnarwhal/'
-          target='_blank'
-          rel='noreferrer'>
-          <img
-            src='socials/instagram.png'
-            alt='Instagram'
-            className='clickable'
-          />
-        </a>
-        <a
-          href='https://devpost.com/ericzh1616'
-          target='_blank'
-          rel='noreferrer'>
-          <img src='socials/devpost.png' alt='Devpost' className='clickable' />
-        </a>
-        <a
-          href='https://16bitnarwhal.itch.io/'
-          target='_blank'
-          rel='noreferrer'>
-          <img src='socials/itchio.png' alt='Itch.io' className='clickable' />
-        </a>
-        <a
-          href='https://codeforces.com/profile/16BitNarwhal'
-          target='_blank'
-          rel='noreferrer'>
-          <img
-            src='socials/codeforces.png'
-            alt='Codeforces'
-            className='clickable'
-          />
-        </a>
-      </div>
     </div>
   );
 };
