@@ -40,6 +40,44 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   
   // Mouse escape system: move mouse to call setIsGesture(false) and completely disable hand tracking
 
+  // Scroll smoothing
+  const scrollBuffer = useRef<Array<number>>([]);
+  const lastScrollTime = useRef(0);
+  const scrollSmoothingFactor = 0.4; // Lower = smoother scrolling (0.2-0.6 recommended)
+  const maxScrollBufferSize = 3; // Number of scroll values to average (3-5 recommended)
+  const minScrollInterval = 16; // Minimum ms between scroll updates (16 = 60fps max, higher = smoother)
+  const scrollDeadZone = 0.02; // Minimum hand movement to trigger scrolling (reduces jitter)
+  const scrollMultiplier = 100; // Scroll speed multiplier (10-30 recommended)
+
+  const smoothScroll = (newScrollSpeed: number) => {
+    const now = Date.now();
+    
+    // Add new scroll speed to buffer
+    scrollBuffer.current.push(newScrollSpeed);
+    
+    // Keep only recent scroll values
+    if (scrollBuffer.current.length > maxScrollBufferSize) {
+      scrollBuffer.current.shift();
+    }
+    
+    // Calculate weighted average (newer values have more weight)
+    let totalWeight = 0;
+    let weightedSum = 0;
+    
+    scrollBuffer.current.forEach((speed, index) => {
+      const weight = index + 1; // Newer values get higher weight
+      weightedSum += speed * weight;
+      totalWeight += weight;
+    });
+    
+    const averagedSpeed = weightedSum / totalWeight;
+    
+    // Apply exponential smoothing
+    const smoothedSpeed = averagedSpeed * scrollSmoothingFactor;
+    
+    return Math.round(smoothedSpeed); // Round to avoid sub-pixel scrolling
+  };
+
   // webcam control
   useEffect(() => {
     if (!enabled || !inputVideoReady) return;
@@ -274,12 +312,18 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
 
     let scrollSpeed = 0;
     if (y < 0.15) {
-      scrollSpeed = (0.15 - y) / 0.15;
-      scrollSpeed = scrollSpeed * 30 + 5;
-      scrollSpeed *= -1;
+      // Scroll up when hand is in top area
+      const scrollIntensity = (0.15 - y) / 0.15;
+      if (scrollIntensity > scrollDeadZone) {
+        scrollSpeed = scrollIntensity * scrollMultiplier;
+        scrollSpeed *= -1; // Negative for upward scrolling
+      }
     } else if (y > 0.75) {
-      scrollSpeed = (y - 0.75) / 0.25;
-      scrollSpeed = scrollSpeed * 30 + 5;
+      // Scroll down when hand is in bottom area
+      const scrollIntensity = (y - 0.75) / 0.25;
+      if (scrollIntensity > scrollDeadZone) {
+        scrollSpeed = scrollIntensity * scrollMultiplier;
+      }
     }
 
     x = x * (window.innerWidth + 200) - 100;
@@ -290,7 +334,13 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     y = Math.max(0, Math.min(window.innerHeight, y));
 
     if (scrollSpeed !== 0) {
-      window.scrollBy(0, scrollSpeed);
+      // Apply scroll smoothing and rate limiting
+      const now = Date.now();
+      if (now - lastScrollTime.current >= minScrollInterval) {
+        const smoothedScrollSpeed = smoothScroll(scrollSpeed);
+        window.scrollBy(0, smoothedScrollSpeed);
+        lastScrollTime.current = now;
+      }
     }
     
     // Apply hand tracking with smoothing
