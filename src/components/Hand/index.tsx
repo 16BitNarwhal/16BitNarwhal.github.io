@@ -8,7 +8,6 @@ import './style.css';
 
 enum Click {
   left = 'click',
-  right = 'contextmenu',
 }
 
 interface HandsContainerProps {
@@ -228,8 +227,6 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   // cursor control
   const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const isHandClickGesture = useRef(false);
-  const isHandContextGesture = useRef(false);
-  const lastRightClickTime = useRef(0);
   const lastElementHovered = useRef<Element | null>(null);
   const indices = [0, 5, 9, 13, 17]; // palm indices
   const prevCursorPosition = useRef({ x: 0, y: 0 });
@@ -365,15 +362,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     } else {
       isHandClickGesture.current = false;
     }
-    if (Date.now() - lastRightClickTime.current < 1000) return;
-    if (gesture.categoryName === 'ILoveYou') {
-      if (!isHandContextGesture.current) {
-        simulateClick({ x, y }, Click.right);
-        isHandContextGesture.current = true;
-      }
-    } else {
-      isHandContextGesture.current = false;
-    }
+
   };
 
   const handleCursorPosition = ({ x, y }: { x: number; y: number }) => {
@@ -424,7 +413,6 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   };
 
   const simulateClick = (position: { x: number; y: number }, type: Click) => {
-    lastRightClickTime.current = Date.now();
     const clickEvent = new MouseEvent(type, {
       view: window,
       bubbles: true,

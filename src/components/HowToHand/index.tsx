@@ -34,7 +34,6 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
         }}>
         <span>🤚Move Around</span>
         <span>✊Left Click</span>
-        <span>🤟Open Navigation</span>
       </div>
       <button
         onClick={close}

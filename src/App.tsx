@@ -6,43 +6,13 @@ import Interests from './pages/Interests';
 import ProjectRouter from './pages/Projects/ProjectRouter';
 
 import HandsContainer from './components/Hand';
-import ContextMenu from './components/ContextMenu';
+
 import HowToHand from './components/HowToHand';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const App = () => {
-  const [contextMenuActive, setContextMenuActive] = useState(false);
   const [isGesture, setIsGesture] = useState(false);
   const [isHowToHand, setIsHowToHand] = useState(false);
-
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    const contextMenu = document.getElementById('context-menu');
-    if (contextMenu) {
-      let x = e.clientX;
-      let y = e.clientY;
-
-      // Adjust if off screen right
-      if (x + contextMenu.offsetWidth > window.innerWidth) {
-        x -= contextMenu.offsetWidth;
-      }
-
-      // Adjust if off screen bottom
-      if (y + contextMenu.offsetHeight > window.innerHeight) {
-        y -= contextMenu.offsetHeight;
-      }
-
-      if (contextMenuActive) {
-        contextMenu.style.visibility = 'hidden';
-      } else {
-        contextMenu.style.visibility = 'visible';
-        contextMenu.style.left = `${x}px`;
-        contextMenu.style.top = `${y}px`;
-      }
-      setContextMenuActive(!contextMenuActive);
-    }
-  };
 
   useEffect(() => {
     const stylesheet = document.styleSheets[0];
@@ -74,7 +44,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div id='paint-on'></div> {/* for paint effect */}
-      <div className='App' onContextMenu={handleContextMenu}>
+      <div className='App'>
         <button
           onClick={() => setIsGesture(!isGesture)}
           style={{
@@ -127,7 +97,7 @@ const App = () => {
             Hand tracking active
           </div>
         )}
-        <ContextMenu />
+
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path='/projects/:id' element={<ProjectRouter />} />
