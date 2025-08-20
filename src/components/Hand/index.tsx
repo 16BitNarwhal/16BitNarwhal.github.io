@@ -13,9 +13,10 @@ enum Click {
 
 interface HandsContainerProps {
   enabled: boolean;
+  onDisable?: () => void; // Callback to disable hand tracking from parent
 }
 
-const HandsContainer = ({ enabled }: HandsContainerProps) => {
+const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   const [videoError, setVideoError] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [inputVideoReady, setInputVideoReady] = useState(false);
@@ -26,6 +27,18 @@ const HandsContainer = ({ enabled }: HandsContainerProps) => {
 
   const inputVideoRef = useRef<HTMLVideoElement | null>(null);
   const started = useRef(false);
+
+  // Smoothing refs
+  const smoothedPosition = useRef({ x: 0, y: 0 });
+  const lastUpdateTime = useRef(0);
+  const positionBuffer = useRef<Array<{ x: number; y: number; timestamp: number }>>([]);
+  const smoothingFactor = 0.3; // Lower = smoother but more lag
+  const maxBufferSize = 5; // Number of frames to average
+  const minUpdateInterval = 16; // Minimum ms between updates (60fps max)
+  const deadZone = 2; // Minimum pixel movement to register (reduces micro-jitter)
+  const maxVelocity = 50; // Maximum pixels per frame to prevent sudden jumps
+  
+  // Mouse escape system: move mouse to call setIsGesture(false) and completely disable hand tracking
 
   // webcam control
   useEffect(() => {
@@ -184,46 +197,108 @@ const HandsContainer = ({ enabled }: HandsContainerProps) => {
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
   const lastFrameTime = useRef(0);
+  // Smoothing function to reduce jitter
+  const smoothPosition = (newX: number, newY: number) => {
+    const now = Date.now();
+    
+    // Add new position to buffer
+    positionBuffer.current.push({ x: newX, y: newY, timestamp: now });
+    
+    // Keep only recent positions
+    if (positionBuffer.current.length > maxBufferSize) {
+      positionBuffer.current.shift();
+    }
+    
+    // Calculate weighted average of recent positions (newer positions have more weight)
+    let totalWeight = 0;
+    let weightedX = 0;
+    let weightedY = 0;
+    
+    positionBuffer.current.forEach((pos, index) => {
+      const weight = index + 1; // Newer positions get higher weight
+      weightedX += pos.x * weight;
+      weightedY += pos.y * weight;
+      totalWeight += weight;
+    });
+    
+    const averagedX = weightedX / totalWeight;
+    const averagedY = weightedY / totalWeight;
+    
+    // Apply exponential smoothing
+    smoothedPosition.current.x = smoothedPosition.current.x * (1 - smoothingFactor) + averagedX * smoothingFactor;
+    smoothedPosition.current.y = smoothedPosition.current.y * (1 - smoothingFactor) + averagedY * smoothingFactor;
+    
+    // Apply velocity limiting to prevent sudden jumps
+    const currentX = smoothedPosition.current.x;
+    const currentY = smoothedPosition.current.y;
+    const deltaX = averagedX - currentX;
+    const deltaY = averagedY - currentY;
+    
+    // Limit velocity to prevent sudden large movements
+    const limitedDeltaX = Math.max(-maxVelocity, Math.min(maxVelocity, deltaX));
+    const limitedDeltaY = Math.max(-maxVelocity, Math.min(maxVelocity, deltaY));
+    
+    // Apply dead zone to filter out micro-movements
+    if (Math.abs(limitedDeltaX) < deadZone && Math.abs(limitedDeltaY) < deadZone) {
+      // Movement is too small, maintain previous position
+      return { x: currentX, y: currentY };
+    }
+    
+    // Return position with velocity limiting applied
+    return { 
+      x: currentX + limitedDeltaX, 
+      y: currentY + limitedDeltaY 
+    };
+  };
+
   const processResults = (results: GestureRecognizerResult) => {
+    // If using mouse, completely skip hand tracking processing
+    if (usingMouse.current) {
+      return;
+    }
+
     let x = 0;
     let y = 0;
-    if (usingMouse.current) {
-      x = prevMousePosition.current.x;
-      y = prevMousePosition.current.y;
-    } else {
-      if (!results.landmarks) return;
-      if (!results.landmarks[0]) return;
-      const landmarks = results.landmarks[0];
-      if (!landmarks) return;
-      indices.forEach((i) => {
-        x += landmarks[i].x;
-        y += landmarks[i].y;
-      });
+    
+    if (!results.landmarks) return;
+    if (!results.landmarks[0]) return;
+    const landmarks = results.landmarks[0];
+    if (!landmarks) return;
+    indices.forEach((i) => {
+      x += landmarks[i].x;
+      y += landmarks[i].y;
+    });
 
-      x /= indices.length;
-      y /= indices.length;
+    x /= indices.length;
+    y /= indices.length;
 
-      let scrollSpeed = 0;
-      if (y < 0.15) {
-        scrollSpeed = (0.15 - y) / 0.15;
-        scrollSpeed = scrollSpeed * 30 + 5;
-        scrollSpeed *= -1;
-      } else if (y > 0.75) {
-        scrollSpeed = (y - 0.75) / 0.25;
-        scrollSpeed = scrollSpeed * 30 + 5;
-      }
+    let scrollSpeed = 0;
+    if (y < 0.15) {
+      scrollSpeed = (0.15 - y) / 0.15;
+      scrollSpeed = scrollSpeed * 30 + 5;
+      scrollSpeed *= -1;
+    } else if (y > 0.75) {
+      scrollSpeed = (y - 0.75) / 0.25;
+      scrollSpeed = scrollSpeed * 30 + 5;
+    }
 
-      x = x * (window.innerWidth + 200) - 100;
-      y = y * (window.innerHeight + 400) - 200;
-      x = window.innerWidth - x;
+    x = x * (window.innerWidth + 200) - 100;
+    y = y * (window.innerHeight + 400) - 200;
+    x = window.innerWidth - x;
 
-      x = Math.max(0, Math.min(window.innerWidth, x));
-      y = Math.max(0, Math.min(window.innerHeight, y));
+    x = Math.max(0, Math.min(window.innerWidth, x));
+    y = Math.max(0, Math.min(window.innerHeight, y));
 
-      if (scrollSpeed !== 0) {
-        window.scrollBy(0, scrollSpeed);
-      }
-      setCursorPosition({ x, y });
+    if (scrollSpeed !== 0) {
+      window.scrollBy(0, scrollSpeed);
+    }
+    
+    // Apply hand tracking with smoothing
+    const now = Date.now();
+    if (now - lastUpdateTime.current >= minUpdateInterval) {
+      const smoothed = smoothPosition(x, y);
+      setCursorPosition(smoothed);
+      lastUpdateTime.current = now;
     }
 
     handleCursorPosition({ x, y });
@@ -335,28 +410,46 @@ const HandsContainer = ({ enabled }: HandsContainerProps) => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
+      
+      // Calculate mouse speed
       const mouseSpeed =
         Math.sqrt(
           Math.pow(e.clientX - prevMousePosition.current.x, 2) +
             Math.pow(e.clientY - prevMousePosition.current.y, 2)
         ) /
         (Date.now() - prevMouseTime.current);
+      
       if (mouseSpeed > 0.1) {
+        // IMMEDIATELY set mouse mode to block hand tracking
         usingMouse.current = true;
+        
+        // Call disable callback to turn off hand tracking completely
+        if (enabled && onDisable) {
+          onDisable(); // This calls setIsGesture(false) in App.tsx
+        }
+        
+        // Direct mouse control - no smoothing
         setCursorPosition({ x: e.clientX - 15, y: e.clientY - 15 });
-        if (stopMouseInterval.current) clearInterval(stopMouseInterval.current);
+        
+        // Clear any existing timer
+        if (stopMouseInterval.current) {
+          clearTimeout(stopMouseInterval.current);
+        }
+        
+        // Set timer to reset mouse flag after mouse stops
         stopMouseInterval.current = setTimeout(() => {
           usingMouse.current = false;
-        }, 500);
-      } else {
-        usingMouse.current = false;
+        }, 1000); // 1 second delay before allowing hand tracking to be re-enabled
       }
+      
       if (videoError) {
         handleCursorPosition({ x: e.clientX, y: e.clientY });
       }
+      
       prevMousePosition.current = { x: e.clientX, y: e.clientY };
       prevMouseTime.current = Date.now();
     };
+    
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
@@ -366,7 +459,7 @@ const HandsContainer = ({ enabled }: HandsContainerProps) => {
         prev.className = prev.className.replace(' hover', '');
       }
     };
-  }, [videoError]);
+  }, [videoError, enabled, onDisable]);
 
   return (
     <div className='hands-container ignore-mouse'>

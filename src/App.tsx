@@ -132,7 +132,10 @@ const App = () => {
           <Route path='/' element={<Main />} />
           <Route path='/projects/:id' element={<ProjectRouter />} />
         </Routes>
-        <HandsContainer enabled={isGesture} />
+        <HandsContainer 
+          enabled={isGesture} 
+          onDisable={() => setIsGesture(false)} 
+        />
         {isHowToHand && isGesture ? (
           <HowToHand close={() => setIsHowToHand(false)} />
         ) : null}
