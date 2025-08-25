@@ -14,14 +14,21 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
         left: '50%',
         top: '50%',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: 'rgba(255, 255, 255, 0.99)',
-        padding: '20px',
-        borderRadius: '15px',
-        boxShadow: '0 0 10px 1px rgba(0, 0, 0, 0.5)',
+        backgroundColor: '#ffffff',
+        padding: '30px',
+        borderRadius: '8px',
+        border: '1px solid #000000',
+        color: '#000000',
+        maxWidth: '400px',
+        textAlign: 'center',
       }}>
-      <h1>Welcome to my site!</h1>
-      <h1>Use your hand to navigate!</h1>
-      <p style={{ marginTop: '-15px' }}>
+      <h1 style={{ margin: '0 0 10px 0', fontSize: '1.5rem', fontWeight: 'normal' }}>
+        Welcome to my site!
+      </h1>
+      <h2 style={{ margin: '0 0 15px 0', fontSize: '1.2rem', fontWeight: 'normal' }}>
+        Use your hand to navigate!
+      </h2>
+      <p style={{ margin: '0 0 20px 0', fontSize: '1rem' }}>
         Please accept camera permissions to try this out!
       </p>
       <div
@@ -29,21 +36,34 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          fontSize: '30px',
-          gap: '20px',
+          fontSize: '1.1rem',
+          gap: '15px',
+          marginBottom: '20px',
         }}>
-        <span>🤚Move Around</span>
-        <span>✊Left Click</span>
+        <span>🤚 Move Around</span>
+        <span>👆 Left Click</span>
       </div>
       <button
         onClick={close}
         style={{
-          backgroundColor: 'transparent',
-          border: 'none',
-          fontWeight: 1000,
-          fontSize: '50px',
+          position: 'absolute',
+          top: '10px',
+          right: '15px',
+          backgroundColor: '#ffffff',
+          border: '1px solid #000000',
+          borderRadius: '4px',
+          width: '30px',
+          height: '30px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: '#000000',
+          transition: 'all 0.2s ease',
         }}>
-        X
+        ×
       </button>
     </div>
   );

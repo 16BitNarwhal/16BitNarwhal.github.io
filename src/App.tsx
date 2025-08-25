@@ -101,7 +101,7 @@ const App = () => {
 const Header = () => {
   return (
     <div id='header' className='App-header'>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '0px' }}>
         <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'normal' }}>
           Eric Zhang
         </h1>

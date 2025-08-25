@@ -228,7 +228,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const isHandClickGesture = useRef(false);
   const lastElementHovered = useRef<Element | null>(null);
-  const indices = [0, 5, 9, 13, 17]; // palm indices
+  const indices = [0, 5]; // relevant indices on hand
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
   const lastFrameTime = useRef(0);
@@ -356,7 +356,8 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     if (!results.gestures[0]) return;
     if (!results.gestures[0][0]) return;
     const gesture = results.gestures[0][0];
-    if (gesture.categoryName === 'Closed_Fist') {
+    if (gesture.categoryName === 'Pointing_Up') {
+      console.log('Pointing Up');
       if (!isHandClickGesture.current) {
         const now = Date.now();
         if (now - lastClickTime.current >= clickDebounceTime) {
@@ -418,6 +419,51 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     }
   };
 
+  type Point = { x: number; y: number };
+
+  function isVisible(el: Element): boolean {
+    const rect = el.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return false;
+    const cs = getComputedStyle(el as HTMLElement);
+    if (!cs) return false;
+    if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0) return false;
+    if (cs.pointerEvents === "none") return false;
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+    if (rect.right < 0 || rect.bottom < 0 || rect.left > vw || rect.top > vh) return false;
+    return true;
+  }
+  
+  function centerOf(el: Element) {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+  
+  function distance(a: Point, b: Point) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+  
+  function getClosestClickableByCenter(point: Point, maxDistance = 20) {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
+    let closest: { element: Element; center: Point; distance: number } | null = null;
+  
+    while (walker.nextNode()) {
+      const el = walker.currentNode as Element;
+      if (!el.classList.contains("clickable") && el.tagName !== "BUTTON") continue;
+      if (!isVisible(el)) continue;
+      console.log("see el", el);
+  
+      const c = centerOf(el);
+      const d = distance(point, c);
+      if (!closest || d < closest.distance) {
+        closest = { element: el, center: c, distance: d };
+      }
+    }
+  
+    if (closest && closest.distance <= maxDistance) return closest;
+    return null;
+  }
+
   const simulateClick = (position: { x: number; y: number }, type: Click) => {
     const clickEvent = new MouseEvent(type, {
       view: window,
@@ -426,11 +472,24 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
       clientX: position.x,
       clientY: position.y,
     });
-    const element: Element | null = document.elementFromPoint(
-      position.x,
-      position.y
-    );
+
+    let element: Element | null = document.elementFromPoint(position.x, position.y);
+
+    // Only accept it if it’s a "clickable"
+    if (element && !element.classList.contains("clickable") && element.tagName !== "BUTTON") {
+      element = null;
+    }
+    console.log("element", element);
+  
+    // Fallback: nearest clickable center
+    if (!element) {
+      const nearest = getClosestClickableByCenter(position, 80);
+      if (nearest) element = nearest.element;
+      console.log("nearest", nearest);
+    }
+  
     if (!element) return;
+    console.log("element", element);
     
     // Dispatch the click event - this will handle links naturally
     element.dispatchEvent(clickEvent);
@@ -438,7 +497,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     // Visual feedback
     element.className += ' mouse_clicked';
     setTimeout(() => {
-      element.className = element.className.replace(' mouse_clicked', '');
+      element!.className = element!.className.replace(' mouse_clicked', '');
     }, 100);
   };
 
@@ -539,7 +598,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
               position: 'fixed',
               left: cursorPosition.x - 25,
               top: cursorPosition.y - 25,
-              fontSize: '50px',
+              fontSize: '30px',
               zIndex: 999,
             }}>
             {isHoveringClickable ? '👆' : '🤚'}
