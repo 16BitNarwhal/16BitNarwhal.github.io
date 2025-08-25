@@ -122,10 +122,16 @@ const Header = () => {
             rel='noreferrer'>
             <img src='socials/github.png' alt='GitHub' className='clickable' />
           </a>
+          <a
+            href='https://twitter.com/16BitNarwhal'
+            target='_blank'
+            rel='noreferrer'>
+            <img src='socials/twitter.png' alt='Twitter' className='clickable' />
+          </a>
           <a href='mailto:ericzh1616@gmail.com' target='_blank' rel='noreferrer'>
             <img src='socials/mail.png' alt='Email' className='clickable' />
           </a>
-          <a
+          {/* <a
             href='https://www.instagram.com/16bitnarwhal/'
             target='_blank'
             rel='noreferrer'>
@@ -146,7 +152,7 @@ const Header = () => {
             target='_blank'
             rel='noreferrer'>
             <img src='socials/itchio.png' alt='Itch.io' className='clickable' />
-          </a>
+          </a> */}
           <a
             href='https://codeforces.com/profile/16BitNarwhal'
             target='_blank'
@@ -160,7 +166,8 @@ const Header = () => {
         </div>
       </div>
       <p style={{ margin: '0 0 20px 0', fontSize: '1rem' }}>
-        Software Engineer, Creator, Learner
+        I do stuff. 
+        <br/><i>(psst. check out the top right corner)</i>
       </p>
     </div>
   );
@@ -170,6 +177,91 @@ const Main = () => {
   return (
     <div className='main'>
       <Header />
+      <WorkSection />
+    </div>
+  );
+};
+
+const WorkSection = () => {
+  const workExperience = [
+    {
+      position: "Software Engineer Intern",
+      company: "Suno",
+      dateRange: "Aug 2025 - Present",
+      description: "Incoming Fall"
+    },
+    {
+      position: "Production Engineering Intern",
+      company: "Meta",
+      dateRange: "May 2025 - Aug 2025",
+      description: "Developed infrastructure to evaluate and optimize model-update pipelines in recommendation systems"
+    },
+    {
+      position: "Software Engineer Intern",
+      company: "Ideogram",
+      dateRange: "Jan 2025 - Apr 2025",
+      description: "Optimized text and image model inference, and developed backend observability systems"
+    }
+  ];
+
+  return (
+    <div style={{ marginTop: '40px' }}>
+      <h2 style={{ 
+        fontSize: '1.5rem', 
+        fontWeight: 'normal', 
+        margin: '0 0 30px 0',
+        borderBottom: '1px solid #000000',
+        paddingBottom: '10px'
+      }}>
+        Work
+      </h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+        {workExperience.map((work, index) => (
+          <div key={index} style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: '5px'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'baseline',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}>
+              <h3 style={{ 
+                fontSize: '1.2rem', 
+                fontWeight: 'normal', 
+                margin: 0 
+              }}>
+                {work.position}
+              </h3>
+              <span style={{ 
+                fontSize: '0.9rem', 
+                color: '#666666',
+                whiteSpace: 'nowrap'
+              }}>
+                {work.dateRange}
+              </span>
+            </div>
+            <div style={{ 
+              fontSize: '1rem', 
+              fontWeight: 'bold',
+              color: '#000000'
+            }}>
+              {work.company}
+            </div>
+            <p style={{ 
+              fontSize: '0.95rem', 
+              margin: '5px 0 0 0',
+              color: '#333333',
+              lineHeight: '1.4'
+            }}>
+              {work.description}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
