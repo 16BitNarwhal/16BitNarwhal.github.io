@@ -38,6 +38,8 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   const maxVelocity = 50; // Maximum pixels per frame to prevent sudden jumps
   
   // Mouse escape system: move mouse to call setIsGesture(false) and completely disable hand tracking
+  const [handTrackingStartTime, setHandTrackingStartTime] = useState<number | null>(null);
+  const initialDelay = 5000; // 5 seconds delay before mouse can disable hand tracking
 
   // Scroll smoothing
   const scrollBuffer = useRef<Array<number>>([]);
@@ -82,6 +84,10 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     if (!enabled || !inputVideoReady) return;
     if (started.current) return;
     started.current = true;
+    
+    // Set the start time when hand tracking is enabled
+    setHandTrackingStartTime(Date.now());
+    
     if (inputVideoRef.current) {
       const initGesture = async () => {
         const vision = await FilesetResolver.forVisionTasks(
@@ -520,26 +526,33 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
         (Date.now() - prevMouseTime.current);
       
       if (mouseSpeed > 0.1) {
-        // IMMEDIATELY set mouse mode to block hand tracking
-        usingMouse.current = true;
+        // Check if enough time has passed since hand tracking started
+        const now = Date.now();
+        const canDisable = !handTrackingStartTime || (now - handTrackingStartTime) >= initialDelay;
         
-        // Call disable callback to turn off hand tracking completely
-        if (enabled && onDisable) {
-          onDisable(); // This calls setIsGesture(false) in App.tsx
+        if (canDisable) {
+          // IMMEDIATELY set mouse mode to block hand tracking
+          usingMouse.current = true;
+          
+          // Call disable callback to turn off hand tracking completely
+          if (enabled && onDisable) {
+            onDisable(); // This calls setIsGesture(false) in App.tsx
+          }
+          
+          // Direct mouse control - no smoothing
+          setCursorPosition({ x: e.clientX - 15, y: e.clientY - 15 });
+          
+          // Clear any existing timer
+          if (stopMouseInterval.current) {
+            clearTimeout(stopMouseInterval.current);
+          }
+          
+          // Set timer to reset mouse flag after mouse stops
+          stopMouseInterval.current = setTimeout(() => {
+            usingMouse.current = false;
+          }, 1000); // 1 second delay before allowing hand tracking to be re-enabled
         }
-        
-        // Direct mouse control - no smoothing
-        setCursorPosition({ x: e.clientX - 15, y: e.clientY - 15 });
-        
-        // Clear any existing timer
-        if (stopMouseInterval.current) {
-          clearTimeout(stopMouseInterval.current);
-        }
-        
-        // Set timer to reset mouse flag after mouse stops
-        stopMouseInterval.current = setTimeout(() => {
-          usingMouse.current = false;
-        }, 1000); // 1 second delay before allowing hand tracking to be re-enabled
+        // If not enough time has passed, ignore mouse movement
       }
       
       if (videoError) {

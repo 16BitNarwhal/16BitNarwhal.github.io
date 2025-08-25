@@ -26,10 +26,14 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
         Welcome to my site!
       </h1>
       <h2 style={{ margin: '0 0 15px 0', fontSize: '1.2rem', fontWeight: 'normal' }}>
-        Use your hand to navigate!
+        Use your hand to navigate! <br />
+        (move your mouse to exit hand tracking)
       </h2>
       <p style={{ margin: '0 0 20px 0', fontSize: '1rem' }}>
         Please accept camera permissions to try this out!
+      </p>
+      <p style={{ margin: '0 0 20px 0', fontSize: '0.9rem', opacity: 0.7 }}>
+        ⏱️ Mouse movement won't disable hand tracking for the first 3 seconds
       </p>
       <div
         style={{
