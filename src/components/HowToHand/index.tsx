@@ -44,8 +44,8 @@ const HowToHand: React.FC<HowToHandProps> = ({ close }) => {
           gap: '15px',
           marginBottom: '20px',
         }}>
-        <span>🤚 Move Around</span>
-        <span>👆 Left Click</span>
+        <span>👆 Move Around</span>
+        <span>✊ Left Click</span>
       </div>
       <button
         onClick={close}

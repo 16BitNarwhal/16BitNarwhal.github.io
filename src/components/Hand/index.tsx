@@ -499,7 +499,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
         const scrollIntensity = (y - 0.75) / 0.25;
         if (scrollIntensity > scrollDeadZone) {
           scrollSpeed = scrollIntensity * scrollMultiplier;
-        }
+        } 
       }
   
       x = x * (window.innerWidth + 200) - 100;
@@ -533,8 +533,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
       if (!results.gestures[0]) return;
       if (!results.gestures[0][0]) return;
       const gesture = results.gestures[0][0];
-      if (gesture.categoryName === 'Pointing_Up') {
-        console.log('Pointing Up');
+      if (gesture.categoryName === 'Closed_Fist') {
         if (!isHandClickGesture.current) {
           const now = Date.now();
           if (now - lastClickTime.current >= clickDebounceTime) {
