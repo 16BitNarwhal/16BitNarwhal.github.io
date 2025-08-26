@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   GestureRecognizer,
   FilesetResolver,
@@ -8,6 +8,59 @@ import './style.css';
 
 enum Click {
   left = 'click',
+}
+
+// Hoisted constants/helpers to avoid unstable deps
+const splatterColors = [
+  '#ff0000',
+  '#00ff00',
+  '#0000ff',
+  '#ffff00',
+  '#ff00ff',
+  '#00ffff',
+];
+const splatterRange = 100;
+const indices = [0, 5]; // relevant indices on hand
+
+type Point = { x: number; y: number };
+function isVisible(el: Element): boolean {
+  const rect = el.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return false;
+  const cs = getComputedStyle(el as HTMLElement);
+  if (!cs) return false;
+  if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0) return false;
+  if (cs.pointerEvents === "none") return false;
+  const vw = document.documentElement.clientWidth;
+  const vh = document.documentElement.clientHeight;
+  if (rect.right < 0 || rect.bottom < 0 || rect.left > vw || rect.top > vh) return false;
+  return true;
+}
+function centerOf(el: Element) {
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
+function distance(a: Point, b: Point) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+function getClosestClickableByCenter(point: Point, maxDistance = 20) {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
+  let closest: { element: Element; center: Point; distance: number } | null = null;
+
+  while (walker.nextNode()) {
+    const el = walker.currentNode as Element;
+    if (!el.classList.contains("clickable") && el.tagName !== "BUTTON") continue;
+    if (!isVisible(el)) continue;
+    console.log("see el", el);
+
+    const c = centerOf(el);
+    const d = distance(point, c);
+    if (!closest || d < closest.distance) {
+      closest = { element: el, center: c, distance: d };
+    }
+  }
+
+  if (closest && closest.distance <= maxDistance) return closest;
+  return null;
 }
 
 interface HandsContainerProps {
@@ -51,8 +104,6 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
   const scrollMultiplier = 100; // Scroll speed multiplier (10-30 recommended)
 
   const smoothScroll = (newScrollSpeed: number) => {
-    const now = Date.now();
-    
     // Add new scroll speed to buffer
     scrollBuffer.current.push(newScrollSpeed);
     
@@ -107,82 +158,14 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     }
   }, [inputVideoReady, enabled]);
 
-  useEffect(() => {
-    if (!enabled) {
-      // Clean up when disabled
-      if (inputVideoRef.current && inputVideoRef.current.srcObject) {
-        const stream = inputVideoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-        inputVideoRef.current.srcObject = null;
-      }
-      setGestureRecognizer(null);
-      started.current = false;
-      setInputVideoReady(false);
-      return;
-    }
-
-    if (!inputVideoReady && !gestureRecognizer) {
-      return;
-    }
-
-    const constraints = {
-      video: { width: { min: 480 }, height: { min: 360 } },
-    };
-    if (navigator.mediaDevices === undefined) {
-      setVideoError(true);
-      return;
-    }
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        if (inputVideoRef.current) {
-          inputVideoRef.current.srcObject = stream;
-        }
-        sendToMediaPipe();
-      })
-      .catch((err) => {
-        setVideoError(true);
-        return;
-      });
-    const sendToMediaPipe = async () => {
-      if (inputVideoRef.current) {
-        if (!inputVideoRef.current.videoWidth || !gestureRecognizer) {
-          requestAnimationFrame(sendToMediaPipe);
-          return;
-        }
-        if (inputVideoRef.current.currentTime === lastVideoTimeRef.current) {
-          requestAnimationFrame(sendToMediaPipe);
-          return;
-        }
-        const results = await gestureRecognizer.recognizeForVideo(
-          inputVideoRef.current,
-          Date.now()
-        );
-        lastVideoTimeRef.current = inputVideoRef.current.currentTime;
-        processResults(results);
-        requestAnimationFrame(sendToMediaPipe);
-      }
-    };
-  }, [gestureRecognizer, enabled]);
-
   // paint splatter effect
-
-  const splatterColors = [
-    '#ff0000',
-    '#00ff00',
-    '#0000ff',
-    '#ffff00',
-    '#ff00ff',
-    '#00ffff',
-  ];
-  const splatterRange = 100;
 
   const splatterContainer = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     splatterContainer.current = document.querySelector('#paint-on');
   }, []);
 
-  const createSplatterElement = (x: number, y: number, size: number) => {
+  const createSplatterElement = useCallback((x: number, y: number, size: number) => {
     if (!splatterContainer.current) return;
 
     const splatter = document.createElement('div');
@@ -212,9 +195,9 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     setTimeout(() => {
       splatter.remove();
     }, Math.random() * 10000 + 1000);
-  };
+  }, []);
 
-  const createSplatter = ({ x, y }: { x: number; y: number }) => {
+  const createSplatter = useCallback(({ x, y }: { x: number; y: number }) => {
     let splatterCount = Math.floor(Math.random() * 5) + 5;
     let bigSplatterCount = Math.floor(Math.random() * 2) + 1;
 
@@ -228,13 +211,12 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
       createSplatterElement(x, y, size);
       bigSplatterCount--;
     }
-  };
+  }, [createSplatterElement]);
 
   // cursor control
   const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const isHandClickGesture = useRef(false);
   const lastElementHovered = useRef<Element | null>(null);
-  const indices = [0, 5]; // relevant indices on hand
   const prevCursorPosition = useRef({ x: 0, y: 0 });
   const lastSplatterTime = useRef(0);
   const lastFrameTime = useRef(0);
@@ -294,91 +276,7 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     };
   };
 
-  const processResults = (results: GestureRecognizerResult) => {
-    // If using mouse, completely skip hand tracking processing
-    if (usingMouse.current) {
-      return;
-    }
-
-    let x = 0;
-    let y = 0;
-    
-    if (!results.landmarks) return;
-    if (!results.landmarks[0]) return;
-    const landmarks = results.landmarks[0];
-    if (!landmarks) return;
-    indices.forEach((i) => {
-      x += landmarks[i].x;
-      y += landmarks[i].y;
-    });
-
-    x /= indices.length;
-    y /= indices.length;
-
-    let scrollSpeed = 0;
-    if (y < 0.15) {
-      // Scroll up when hand is in top area
-      const scrollIntensity = (0.15 - y) / 0.15;
-      if (scrollIntensity > scrollDeadZone) {
-        scrollSpeed = scrollIntensity * scrollMultiplier;
-        scrollSpeed *= -1; // Negative for upward scrolling
-      }
-    } else if (y > 0.75) {
-      // Scroll down when hand is in bottom area
-      const scrollIntensity = (y - 0.75) / 0.25;
-      if (scrollIntensity > scrollDeadZone) {
-        scrollSpeed = scrollIntensity * scrollMultiplier;
-      }
-    }
-
-    x = x * (window.innerWidth + 200) - 100;
-    y = y * (window.innerHeight + 400) - 200;
-    x = window.innerWidth - x;
-
-    x = Math.max(0, Math.min(window.innerWidth, x));
-    y = Math.max(0, Math.min(window.innerHeight, y));
-
-    if (scrollSpeed !== 0) {
-      // Apply scroll smoothing and rate limiting
-      const now = Date.now();
-      if (now - lastScrollTime.current >= minScrollInterval) {
-        const smoothedScrollSpeed = smoothScroll(scrollSpeed);
-        window.scrollBy(0, smoothedScrollSpeed);
-        lastScrollTime.current = now;
-      }
-    }
-    
-    // Apply hand tracking with smoothing
-    const now = Date.now();
-    if (now - lastUpdateTime.current >= minUpdateInterval) {
-      const smoothed = smoothPosition(x, y);
-      setCursorPosition(smoothed);
-      lastUpdateTime.current = now;
-    }
-
-    handleCursorPosition({ x, y });
-
-    if (!results.gestures) return;
-    if (!results.gestures[0]) return;
-    if (!results.gestures[0][0]) return;
-    const gesture = results.gestures[0][0];
-    if (gesture.categoryName === 'Pointing_Up') {
-      console.log('Pointing Up');
-      if (!isHandClickGesture.current) {
-        const now = Date.now();
-        if (now - lastClickTime.current >= clickDebounceTime) {
-          simulateClick({ x, y }, Click.left);
-          lastClickTime.current = now;
-          isHandClickGesture.current = true;
-        }
-      }
-    } else {
-      isHandClickGesture.current = false;
-    }
-
-  };
-
-  const handleCursorPosition = ({ x, y }: { x: number; y: number }) => {
+  const handleCursorPosition = useCallback(({ x, y }: { x: number; y: number }) => {
     const cursorSpeed =
       Math.sqrt(
         Math.pow(x - prevCursorPosition.current.x, 2) +
@@ -423,54 +321,9 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
         lastElementHovered.current = element;
       }
     }
-  };
+  }, [createSplatter]);
 
-  type Point = { x: number; y: number };
-
-  function isVisible(el: Element): boolean {
-    const rect = el.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return false;
-    const cs = getComputedStyle(el as HTMLElement);
-    if (!cs) return false;
-    if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0) return false;
-    if (cs.pointerEvents === "none") return false;
-    const vw = document.documentElement.clientWidth;
-    const vh = document.documentElement.clientHeight;
-    if (rect.right < 0 || rect.bottom < 0 || rect.left > vw || rect.top > vh) return false;
-    return true;
-  }
-  
-  function centerOf(el: Element) {
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  }
-  
-  function distance(a: Point, b: Point) {
-    return Math.hypot(a.x - b.x, a.y - b.y);
-  }
-  
-  function getClosestClickableByCenter(point: Point, maxDistance = 20) {
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
-    let closest: { element: Element; center: Point; distance: number } | null = null;
-  
-    while (walker.nextNode()) {
-      const el = walker.currentNode as Element;
-      if (!el.classList.contains("clickable") && el.tagName !== "BUTTON") continue;
-      if (!isVisible(el)) continue;
-      console.log("see el", el);
-  
-      const c = centerOf(el);
-      const d = distance(point, c);
-      if (!closest || d < closest.distance) {
-        closest = { element: el, center: c, distance: d };
-      }
-    }
-  
-    if (closest && closest.distance <= maxDistance) return closest;
-    return null;
-  }
-
-  const simulateClick = (position: { x: number; y: number }, type: Click) => {
+  const simulateClick = useCallback((position: { x: number; y: number }, type: Click) => {
     const clickEvent = new MouseEvent(type, {
       view: window,
       bubbles: true,
@@ -498,14 +351,14 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
     console.log("element", element);
     
     // Dispatch the click event - this will handle links naturally
-    element.dispatchEvent(clickEvent);
+    (element as HTMLElement).dispatchEvent(clickEvent);
     
     // Visual feedback
-    element.className += ' mouse_clicked';
+    (element as HTMLElement).className += ' mouse_clicked';
     setTimeout(() => {
-      element!.className = element!.className.replace(' mouse_clicked', '');
+      (element as HTMLElement).className = (element as HTMLElement).className.replace(' mouse_clicked', '');
     }, 100);
-  };
+  }, []);
 
   const usingMouse = useRef(true);
   const prevMousePosition = useRef({ x: 0, y: 0 });
@@ -569,10 +422,152 @@ const HandsContainer = ({ enabled, onDisable }: HandsContainerProps) => {
       window.removeEventListener('mousemove', handleMouseMove);
       const prev: Element | null = lastElementHovered.current as Element | null;
       if (prev) {
-        prev.className = prev.className.replace(' hover', '');
+        (prev as HTMLElement).className = (prev as HTMLElement).className.replace(' hover', '');
       }
     };
-  }, [videoError, enabled, onDisable]);
+  }, [videoError, enabled, onDisable, handTrackingStartTime, handleCursorPosition]);
+
+  useEffect(() => {
+    if (!enabled) {
+      // Clean up when disabled
+      if (inputVideoRef.current && inputVideoRef.current.srcObject) {
+        const stream = inputVideoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        inputVideoRef.current.srcObject = null;
+      }
+      setGestureRecognizer(null);
+      started.current = false;
+      setInputVideoReady(false);
+      return;
+    }
+
+    if (!inputVideoReady && !gestureRecognizer) {
+      return;
+    }
+
+    const constraints = {
+      video: { width: { min: 480 }, height: { min: 360 } },
+    };
+    if (navigator.mediaDevices === undefined) {
+      setVideoError(true);
+      return;
+    }
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then((stream) => {
+        if (inputVideoRef.current) {
+          inputVideoRef.current.srcObject = stream;
+        }
+        sendToMediaPipe();
+      })
+      .catch((err) => {
+        setVideoError(true);
+        return;
+      });
+
+    const processResults = (results: GestureRecognizerResult) => {
+      // If using mouse, completely skip hand tracking processing
+      if (usingMouse.current) {
+        return;
+      }
+  
+      let x = 0;
+      let y = 0;
+      
+      if (!results.landmarks) return;
+      if (!results.landmarks[0]) return;
+      const landmarks = results.landmarks[0];
+      if (!landmarks) return;
+      indices.forEach((i) => {
+        x += landmarks[i].x;
+        y += landmarks[i].y;
+      });
+  
+      x /= indices.length;
+      y /= indices.length;
+  
+      let scrollSpeed = 0;
+      if (y < 0.15) {
+        // Scroll up when hand is in top area
+        const scrollIntensity = (0.15 - y) / 0.15;
+        if (scrollIntensity > scrollDeadZone) {
+          scrollSpeed = scrollIntensity * scrollMultiplier;
+          scrollSpeed *= -1; // Negative for upward scrolling
+        }
+      } else if (y > 0.75) {
+        // Scroll down when hand is in bottom area
+        const scrollIntensity = (y - 0.75) / 0.25;
+        if (scrollIntensity > scrollDeadZone) {
+          scrollSpeed = scrollIntensity * scrollMultiplier;
+        }
+      }
+  
+      x = x * (window.innerWidth + 200) - 100;
+      y = y * (window.innerHeight + 400) - 200;
+      x = window.innerWidth - x;
+  
+      x = Math.max(0, Math.min(window.innerWidth, x));
+      y = Math.max(0, Math.min(window.innerHeight, y));
+  
+      if (scrollSpeed !== 0) {
+        // Apply scroll smoothing and rate limiting
+        const now = Date.now();
+        if (now - lastScrollTime.current >= minScrollInterval) {
+          const smoothedScrollSpeed = smoothScroll(scrollSpeed);
+          window.scrollBy(0, smoothedScrollSpeed);
+          lastScrollTime.current = now;
+        }
+      }
+      
+      // Apply hand tracking with smoothing
+      const now = Date.now();
+      if (now - lastUpdateTime.current >= minUpdateInterval) {
+        const smoothed = smoothPosition(x, y);
+        setCursorPosition(smoothed);
+        lastUpdateTime.current = now;
+      }
+  
+      handleCursorPosition({ x, y });
+  
+      if (!results.gestures) return;
+      if (!results.gestures[0]) return;
+      if (!results.gestures[0][0]) return;
+      const gesture = results.gestures[0][0];
+      if (gesture.categoryName === 'Pointing_Up') {
+        console.log('Pointing Up');
+        if (!isHandClickGesture.current) {
+          const now = Date.now();
+          if (now - lastClickTime.current >= clickDebounceTime) {
+            simulateClick({ x, y }, Click.left);
+            lastClickTime.current = now;
+            isHandClickGesture.current = true;
+          }
+        }
+      } else {
+        isHandClickGesture.current = false;
+      }
+    };
+
+    const sendToMediaPipe = async () => {
+      if (inputVideoRef.current) {
+        if (!inputVideoRef.current.videoWidth || !gestureRecognizer) {
+          requestAnimationFrame(sendToMediaPipe);
+          return;
+        }
+        if (inputVideoRef.current.currentTime === lastVideoTimeRef.current) {
+          requestAnimationFrame(sendToMediaPipe);
+          return;
+        }
+        const results = await gestureRecognizer.recognizeForVideo(
+          inputVideoRef.current,
+          Date.now()
+        );
+        lastVideoTimeRef.current = inputVideoRef.current.currentTime;
+        processResults(results);
+        requestAnimationFrame(sendToMediaPipe);
+      }
+    };
+  }, [gestureRecognizer, enabled, inputVideoReady, handleCursorPosition, simulateClick]);
 
   return (
     <div className='hands-container ignore-mouse'>
